@@ -8,6 +8,7 @@ import { GameProvider } from "@/contexts/GameContext";
 import Index from "./pages/Index";
 import LevelSelect from "./pages/LevelSelect";
 import Level from "./pages/Level";
+import Leaderboard from "./pages/Leaderboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,6 +24,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/levels" element={<LevelSelect />} />
             <Route path="/level/:levelId" element={<Level />} />
+            <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

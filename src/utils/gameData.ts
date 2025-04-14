@@ -19,7 +19,7 @@ export interface MissionData {
 const level1: MissionData = {
   id: 1,
   title: "Operation First Key",
-  brief: "Agent, we've intercepted an encrypted message from the enemy. Intelligence suggests they're using a simple Caesar shift cipher. Your task is to decrypt the message and extract the location of their meeting point.",
+  brief: "Agent, we've intercepted an encrypted message from the ENIGMA syndicate. Intelligence suggests they're using a simple Caesar shift cipher. Your task is to decrypt the message and extract the location of their upcoming weapons exchange.",
   cryptoType: "Caesar Cipher",
   difficulty: "easy",
   puzzleData: {
@@ -41,7 +41,7 @@ const level1: MissionData = {
 const level2: MissionData = {
   id: 2,
   title: "Operation Poly Alpha",
-  brief: "Great work on the last mission! Now we have intercepted another message, but this time they've upgraded their encryption. Our analysts believe they're using a Vigenère cipher. The key is likely related to their organization name: 'SHADOW'.",
+  brief: "The ENIGMA syndicate is evolving their encryption techniques. This time, we've intercepted a message encrypted with a Vigenère cipher. One of our double agents has revealed the key is related to their organization name: 'SHADOW'. Decrypt this message to uncover their next meeting point.",
   cryptoType: "Vigenère Cipher",
   difficulty: "medium",
   puzzleData: {
@@ -63,7 +63,7 @@ const level2: MissionData = {
 const level3: MissionData = {
   id: 3,
   title: "Operation Digital Maze",
-  brief: "Agent, this next challenge is more complex. The enemy has started using digital encoding techniques to hide their messages. First, they encoded the message in Base64, then converted parts to hexadecimal. You'll need to reverse both processes.",
+  brief: "Agent, we're getting closer to ENIGMA's inner circle. Their elite communications team has started using digital encoding techniques. This message was first encoded in Base64, then parts were converted to hexadecimal. Decode it to learn about their hidden asset.",
   cryptoType: "Base64 + Hex",
   difficulty: "medium",
   puzzleData: {
@@ -81,14 +81,81 @@ const level3: MissionData = {
   }
 };
 
+// Level 4: AES Decryption
+const level4: MissionData = {
+  id: 4,
+  title: "Operation Cipher Lock",
+  brief: "Critical mission! We've infiltrated ENIGMA's data server and extracted an encrypted file. Our tech team believes it's encrypted using AES. An informant has provided the password hint: 'The name of the operation where ENIGMA was first discovered + the year'. Decrypt the data to reveal their next target.",
+  cryptoType: "AES Decryption",
+  difficulty: "medium",
+  puzzleData: {
+    challenge: "U2VjdXJlZCBkYXRhOiBFbmNyeXB0ZWQgd2l0aCBBRVMuIFVzZSBwYXNzd29yZCBoaW50LiBUYXJnZXQgaXM6IENJVFlfSEFMTA==",
+    hint: [
+      "The operation was 'BLACKBIRD' and the year was '2018'",
+      "Combine them without spaces: BLACKBIRD2018",
+      "For this simulation, the AES-encrypted data is represented in Base64. Decoding it with the correct password reveals: 'CITY_HALL'",
+    ],
+    solution: "CITY_HALL",
+    solutionCheck: (input: string) => {
+      const normalized = input.toUpperCase().trim();
+      return normalized === "CITY_HALL";
+    }
+  }
+};
+
+// Level 5: Hash Cracking
+const level5: MissionData = {
+  id: 5,
+  title: "Operation Hash Hunter",
+  brief: "We've intercepted ENIGMA's password hash for their secure facility. Their security systems use SHA-256 hashing, but intelligence suggests they're using a simple password. Crack the hash to gain access to their main facility and continue your infiltration.",
+  cryptoType: "Hash Cracking (SHA-256)",
+  difficulty: "hard",
+  puzzleData: {
+    challenge: "Hash: 8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
+    hint: [
+      "This is a SHA-256 hash of a common password.",
+      "Try common passwords like 'admin', 'password', '123456', etc.",
+      "The password is 'admin'",
+    ],
+    solution: "admin",
+    solutionCheck: (input: string) => {
+      const normalized = input.toLowerCase().trim();
+      return normalized === "admin";
+    }
+  }
+};
+
+// Level 6: Steganography
+const level6: MissionData = {
+  id: 6,
+  title: "Operation Hidden Message",
+  brief: "ENIGMA has hidden their next operation details within an image file shared on their public website. Our analysts believe they're using steganography to hide text in the image. Examine the image and extract the hidden message to uncover their plans.",
+  cryptoType: "Steganography",
+  difficulty: "hard",
+  puzzleData: {
+    challenge: "The message is hidden in the least significant bits of the image. Extract it to reveal their plans.",
+    hint: [
+      "In steganography, data can be hidden in the least significant bits (LSB) of image pixels.",
+      "For this simulation, the message is: 'ATTACK AT DAWN, OPERATION THUNDERSTRIKE IS GO'",
+      "In a real steganography challenge, you would use tools to extract this data.",
+    ],
+    solution: "ATTACK AT DAWN, OPERATION THUNDERSTRIKE IS GO",
+    solutionCheck: (input: string) => {
+      const normalized = input.toUpperCase().trim();
+      return normalized.includes("ATTACK AT DAWN") && normalized.includes("THUNDERSTRIKE");
+    }
+  }
+};
+
 // Game levels data
-export const levels: MissionData[] = [level1, level2, level3];
+export const levels: MissionData[] = [level1, level2, level3, level4, level5, level6];
 
 // Player's game progress
 export interface GameProgress {
   completedLevels: number[];
   currentLevel: number;
   hintsUsed: Record<number, number>; // Level ID -> number of hints used
+  completionDates?: Record<number, string>; // Level ID -> completion date
 }
 
 // Initial game progress
@@ -96,6 +163,7 @@ export const initialGameProgress: GameProgress = {
   completedLevels: [],
   currentLevel: 1,
   hintsUsed: {},
+  completionDates: {}
 };
 
 // Get level info for level selection

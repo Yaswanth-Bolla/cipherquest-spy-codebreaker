@@ -42,6 +42,12 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
         ? prev.completedLevels
         : [...prev.completedLevels, levelId];
       
+      // Record completion date
+      const completionDates = {
+        ...prev.completionDates,
+        [levelId]: new Date().toISOString()
+      };
+      
       // Unlock next level
       const nextLevel = Math.min(levelId + 1, levels.length);
       const currentLevel = Math.max(prev.currentLevel, nextLevel);
@@ -49,6 +55,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
       return {
         ...prev,
         completedLevels,
+        completionDates,
         currentLevel,
       };
     });
@@ -67,7 +74,9 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
   };
 
   const resetProgress = () => {
-    setProgress(initialGameProgress);
+    if (window.confirm('Are you sure you want to reset all your progress? This cannot be undone.')) {
+      setProgress(initialGameProgress);
+    }
   };
 
   const value = {
