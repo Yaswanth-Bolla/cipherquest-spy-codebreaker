@@ -111,7 +111,8 @@
 
   .scanner::after {
     content: "";
-    @apply absolute top-0 left-0 right-0 bottom-0 bg-gradient-to-b from-transparent via-cipher-primary/10 to-transparent;
+    @apply absolute top-0 left-0 right-0 bottom-0;
+    background: linear-gradient(to bottom, transparent, rgba(0, 255, 204, 0.1), transparent);
     animation: scan 2s linear infinite;
   }
 
@@ -130,7 +131,8 @@
 
   .crt-effect::before {
     content: " ";
-    @apply block absolute top-0 left-0 bottom-0 right-0 bg-gradient-to-b from-transparent via-cipher-primary/5 to-transparent pointer-events-none;
+    @apply block absolute top-0 left-0 bottom-0 right-0 pointer-events-none;
+    background: linear-gradient(to bottom, transparent, rgba(0, 255, 204, 0.05), transparent);
     background-size: 100% 3px;
     animation: crt-scan 6s linear infinite;
   }

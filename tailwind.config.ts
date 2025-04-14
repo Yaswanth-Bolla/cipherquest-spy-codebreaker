@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -116,4 +117,19 @@ export default {
 		}
 	},
 	plugins: [require("tailwindcss-animate")],
+	safelist: [
+		{
+			pattern: /from-(transparent|.*)/,
+		},
+		{
+			pattern: /via-(transparent|.*)/,
+			variants: ['hover', 'focus', 'group-hover'],
+		},
+		{
+			pattern: /to-(transparent|.*)/,
+		},
+		{
+			pattern: /bg-gradient-to-(t|tr|r|br|b|bl|l|tl)/,
+		},
+	],
 } satisfies Config;
