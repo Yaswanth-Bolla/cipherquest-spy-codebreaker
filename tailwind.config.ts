@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,14 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				cipher: {
+					primary: '#00ffcc',
+					secondary: '#66ff66',
+					danger: '#ff3366',
+					dark: '#121212',
+					darker: '#0a0a0a',
+					light: '#e0e0e0',
 				}
 			},
 			borderRadius: {
@@ -84,11 +93,26 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'text-flicker': {
+					'0%, 100%': { opacity: '1' },
+					'50%': { opacity: '0.7' },
+				},
+				'pulse-glow': {
+					'0%, 100%': { boxShadow: '0 0 5px rgba(0, 255, 204, 0.7)' },
+					'50%': { boxShadow: '0 0 20px rgba(0, 255, 204, 0.9)' },
+				},
+				'typing': {
+					'from': { width: '0' },
+					'to': { width: '100%' },
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'text-flicker': 'text-flicker 2s linear infinite',
+				'pulse-glow': 'pulse-glow 1.5s ease-in-out infinite',
+				'typing': 'typing 3.5s steps(40, end)',
 			}
 		}
 	},
