@@ -6,8 +6,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { GameProvider } from "@/contexts/GameContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { setupSupabaseSchema } from "@/lib/setupSupabase";
+import { toast } from "sonner";
 import Index from "./pages/Index";
 import LevelSelect from "./pages/LevelSelect";
 import Level from "./pages/Level";
@@ -17,11 +18,28 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const App = () => {
+  const [isInitialized, setIsInitialized] = useState(false);
+
   useEffect(() => {
     // Setup Supabase schema if needed
-    setupSupabaseSchema().catch(error => {
-      console.error("Failed to setup Supabase schema:", error);
-    });
+    const initializeSupabase = async () => {
+      try {
+        // Check if environment variables are available
+        if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+          console.warn("Supabase environment variables not found. Some features may not work correctly.");
+          toast.warning("Supabase configuration missing. Some features may not work correctly.");
+        } else {
+          await setupSupabaseSchema();
+        }
+        
+        setIsInitialized(true);
+      } catch (error) {
+        console.error("Failed to setup Supabase schema:", error);
+        setIsInitialized(true); // Continue anyway to avoid blocking the app
+      }
+    };
+
+    initializeSupabase();
   }, []);
 
   return (

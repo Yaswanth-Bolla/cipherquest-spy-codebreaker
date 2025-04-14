@@ -3,6 +3,12 @@ import { supabase } from './supabase';
 
 export async function setupSupabaseSchema() {
   try {
+    // Check if Supabase is properly initialized
+    if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+      console.warn('Supabase environment variables are not set. Skipping schema setup.');
+      return false;
+    }
+
     // Check if the leaderboard table exists
     const { data: tableExists, error } = await supabase
       .from('leaderboard')
