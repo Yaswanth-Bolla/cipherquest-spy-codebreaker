@@ -47,15 +47,15 @@ export function vigenereCipher(text: string, key: string, decrypt = false): stri
       const textCode = textChar.charCodeAt(0) - 97; // 'a' is 97
       const keyCode = keyChar.charCodeAt(0) - 97;
       
-      let result: number;
+      let resultCode: number;
       
       if (decrypt) {
-        result = (textCode - keyCode + 26) % 26;
+        resultCode = (textCode - keyCode + 26) % 26;
       } else {
-        result = (textCode + keyCode) % 26;
+        resultCode = (textCode + keyCode) % 26;
       }
       
-      const resultChar = String.fromCharCode(result + 97);
+      const resultChar = String.fromCharCode(resultCode + 97);
       result.push(isUpperCase ? resultChar.toUpperCase() : resultChar);
       keyIndex++;
     } else {

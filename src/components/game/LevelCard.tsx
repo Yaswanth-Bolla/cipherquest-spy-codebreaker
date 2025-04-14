@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { CircleCheck, CircleLock } from 'lucide-react';
+import { CircleCheck, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export interface LevelInfo {
@@ -30,7 +30,7 @@ const LevelCard: React.FC<LevelCardProps> = ({ level }) => {
       <Card className={`border ${level.isCompleted ? 'border-green-500/50' : 'border-cipher-primary/50'} bg-cipher-darker/80 h-full relative overflow-hidden`}>
         {level.isLocked && (
           <div className="absolute inset-0 bg-black/70 flex items-center justify-center z-10">
-            <CircleLock className="text-gray-400" size={40} />
+            <Lock className="text-gray-400" size={40} />
           </div>
         )}
         {level.isCompleted && (
