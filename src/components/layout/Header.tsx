@@ -5,6 +5,7 @@ import { Layers, HelpCircle, Settings, Award, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import HelpDialog from './HelpDialog';
 import SettingsDialog from './SettingsDialog';
+import ThemeToggle from './ThemeToggle';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -78,7 +79,9 @@ const Header: React.FC = () => {
         </NavigationMenu>
       </div>
       
-      <div className="flex gap-3">
+      <div className="flex gap-3 items-center">
+        <ThemeToggle />
+        
         <Button 
           variant="ghost" 
           size="icon" 

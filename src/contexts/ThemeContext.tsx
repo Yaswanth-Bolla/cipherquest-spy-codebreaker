@@ -30,7 +30,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   useEffect(() => {
     // Check if user has a saved theme preference
     const savedTheme = localStorage.getItem('cipher-theme') as Theme | null;
-    if (savedTheme) {
+    if (savedTheme && (savedTheme === 'dark' || savedTheme === 'light')) {
       setThemeState(savedTheme);
     }
   }, []);
@@ -40,10 +40,15 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     document.documentElement.classList.remove('light', 'dark');
     document.documentElement.classList.add(theme);
     localStorage.setItem('cipher-theme', theme);
+    console.log("Theme changed to:", theme); // Debug log
   }, [theme]);
 
   const toggleTheme = () => {
-    setThemeState(prevTheme => (prevTheme === 'dark' ? 'light' : 'dark'));
+    setThemeState(prevTheme => {
+      const newTheme = prevTheme === 'dark' ? 'light' : 'dark';
+      console.log("Toggling theme from", prevTheme, "to", newTheme); // Debug log
+      return newTheme;
+    });
   };
 
   const setTheme = (newTheme: Theme) => {
