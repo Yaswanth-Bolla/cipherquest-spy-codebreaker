@@ -13,7 +13,9 @@ import { Switch } from '@/components/ui/switch';
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
 import { useGame } from '@/contexts/GameContext';
-import { Volume2, VolumeX, RotateCcw } from 'lucide-react';
+import { useTheme } from '@/contexts/ThemeContext';
+import { Volume2, VolumeX, RotateCcw, Moon, Sun } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 interface SettingsDialogProps {
   open: boolean;
@@ -22,9 +24,18 @@ interface SettingsDialogProps {
 
 const SettingsDialog: React.FC<SettingsDialogProps> = ({ open, onOpenChange }) => {
   const { resetProgress } = useGame();
+  const { theme, toggleTheme } = useTheme();
+  const { toast } = useToast();
   const [soundEnabled, setSoundEnabled] = React.useState(true);
   const [soundVolume, setSoundVolume] = React.useState([50]);
-  const [darkTheme, setDarkTheme] = React.useState(true);
+  
+  const handleSaveSettings = () => {
+    toast({
+      title: "Settings saved",
+      description: "Your preferences have been updated",
+    });
+    onOpenChange(false);
+  };
   
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -77,11 +88,14 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ open, onOpenChange }) =
             <h3 className="text-sm font-medium text-gray-300">Display Settings</h3>
             
             <div className="flex items-center justify-between">
-              <Label htmlFor="theme-toggle" className="text-sm">Dark Theme</Label>
+              <div className="flex items-center gap-2">
+                {theme === 'dark' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+                <Label htmlFor="theme-toggle" className="text-sm">Dark Theme</Label>
+              </div>
               <Switch 
                 id="theme-toggle"
-                checked={darkTheme}
-                onCheckedChange={setDarkTheme}
+                checked={theme === 'dark'}
+                onCheckedChange={toggleTheme}
               />
             </div>
           </div>
@@ -104,7 +118,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ open, onOpenChange }) =
         </div>
         
         <DialogFooter>
-          <Button onClick={() => onOpenChange(false)}>
+          <Button onClick={handleSaveSettings}>
             Save Changes
           </Button>
         </DialogFooter>

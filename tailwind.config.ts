@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -64,12 +63,12 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				cipher: {
-					primary: '#00ffcc',
-					secondary: '#66ff66',
-					danger: '#ff3366',
-					dark: '#121212',
-					darker: '#0a0a0a',
-					light: '#e0e0e0',
+					primary: 'var(--cipher-primary, #00ffcc)',
+					secondary: 'var(--cipher-secondary, #66ff66)',
+					danger: 'var(--cipher-danger, #ff3366)',
+					dark: 'var(--cipher-dark, #121212)',
+					darker: 'var(--cipher-darker, #0a0a0a)',
+					light: 'var(--cipher-light, #e0e0e0)',
 				}
 			},
 			borderRadius: {
