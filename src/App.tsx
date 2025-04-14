@@ -24,17 +24,11 @@ const App = () => {
     // Setup Supabase schema if needed
     const initializeSupabase = async () => {
       try {
-        // Check if environment variables are available
-        if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
-          console.warn("Supabase environment variables not found. Some features may not work correctly.");
-          toast.warning("Supabase configuration missing. Some features may not work correctly.");
-        } else {
-          await setupSupabaseSchema();
-        }
-        
+        await setupSupabaseSchema();
         setIsInitialized(true);
       } catch (error) {
         console.error("Failed to setup Supabase schema:", error);
+        toast.error("Failed to connect to Supabase. Some features may not work correctly.");
         setIsInitialized(true); // Continue anyway to avoid blocking the app
       }
     };
