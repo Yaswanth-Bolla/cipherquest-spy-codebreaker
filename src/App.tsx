@@ -3,13 +3,15 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { GameProvider } from "@/contexts/GameContext";
+import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { useEffect, useState } from "react";
 import { setupSupabaseSchema } from "@/lib/setupSupabase";
 import { toast } from "sonner";
 import Index from "./pages/Index";
+import Auth from "./pages/Auth";
 import LevelSelect from "./pages/LevelSelect";
 import Level from "./pages/Level";
 import Leaderboard from "./pages/Leaderboard";
@@ -21,7 +23,6 @@ const App = () => {
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    // Setup Supabase schema if needed
     const initializeSupabase = async () => {
       try {
         await setupSupabaseSchema();
@@ -29,7 +30,7 @@ const App = () => {
       } catch (error) {
         console.error("Failed to setup Supabase schema:", error);
         toast.error("Failed to connect to Supabase. Some features may not work correctly.");
-        setIsInitialized(true); // Continue anyway to avoid blocking the app
+        setIsInitialized(true);
       }
     };
 
@@ -39,21 +40,24 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <GameProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/levels" element={<LevelSelect />} />
-                <Route path="/level/:levelId" element={<Level />} />
-                <Route path="/leaderboard" element={<Leaderboard />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </BrowserRouter>
-          </TooltipProvider>
-        </GameProvider>
+        <AuthProvider>
+          <GameProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/auth" element={<Auth />} />
+                  <Route path="/levels" element={<LevelSelect />} />
+                  <Route path="/level/:levelId" element={<Level />} />
+                  <Route path="/leaderboard" element={<Leaderboard />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </BrowserRouter>
+            </TooltipProvider>
+          </GameProvider>
+        </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

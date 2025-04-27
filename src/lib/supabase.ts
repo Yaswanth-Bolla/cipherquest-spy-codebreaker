@@ -1,13 +1,11 @@
 
 import { createClient } from '@supabase/supabase-js';
 import { supabase as configuredSupabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
 
-// Use the already properly configured client from the integration
 export const supabase = configuredSupabase;
 
 export type LeaderboardEntry = {
-  id: number;
+  id: string;
   name: string;
   completedLevels: number;
   totalTime: string;
@@ -15,65 +13,49 @@ export type LeaderboardEntry = {
   created_at?: string;
 };
 
-// Function to get all leaderboard entries
 export async function getLeaderboard(): Promise<LeaderboardEntry[]> {
   try {
     const { data, error } = await supabase
       .from('leaderboard')
-      .select('*')
-      .order('completedLevels', { ascending: false });
+      .select('*');
 
     if (error) {
       console.error('Error fetching leaderboard:', error);
       return [];
     }
 
-    return data || [];
+    return data.map(entry => ({
+      id: entry.id,
+      name: entry.name,
+      completedLevels: entry.completedlevels,
+      totalTime: entry.totaltime,
+      rank: entry.rank,
+      created_at: entry.created_at
+    }));
   } catch (error) {
     console.error('Exception fetching leaderboard:', error);
     return [];
   }
 }
 
-// Function to add a new leaderboard entry
-export async function addLeaderboardEntry(entry: Omit<LeaderboardEntry, 'id' | 'created_at'>): Promise<LeaderboardEntry | null> {
+// Function to update user's progress
+export async function updateUserProgress(completedLevel: number, totalTime: string): Promise<void> {
   try {
-    const { data, error } = await supabase
-      .from('leaderboard')
-      .insert(entry)
-      .select()
-      .single();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('No authenticated user');
+
+    const { error } = await supabase
+      .from('profiles')
+      .update({
+        completed_levels: supabase.sql`array_append(completed_levels, ${completedLevel})`,
+        total_time: totalTime
+      })
+      .eq('id', user.id);
 
     if (error) {
-      console.error('Error adding leaderboard entry:', error);
-      return null;
+      console.error('Error updating user progress:', error);
     }
-
-    return data;
   } catch (error) {
-    console.error('Exception adding leaderboard entry:', error);
-    return null;
-  }
-}
-
-// Function to update a leaderboard entry
-export async function updateLeaderboardEntry(id: number, updates: Partial<LeaderboardEntry>): Promise<LeaderboardEntry | null> {
-  try {
-    const { data, error } = await supabase
-      .from('leaderboard')
-      .update(updates)
-      .eq('id', id)
-      .select()
-      .single();
-
-    if (error) {
-      console.error('Error updating leaderboard entry:', error);
-      return null;
-    }
-
-    return data;
-  } catch (error) {
-    console.error('Exception updating leaderboard entry:', error);
-    return null;
+    console.error('Exception updating user progress:', error);
   }
 }
