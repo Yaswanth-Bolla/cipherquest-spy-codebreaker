@@ -44,10 +44,29 @@ export async function updateUserProgress(completedLevel: number, totalTime: stri
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('No authenticated user');
 
+    // Fix: Instead of using supabase.sql, use a direct array append approach
+    const { data: profileData, error: profileError } = await supabase
+      .from('profiles')
+      .select('completed_levels')
+      .eq('id', user.id)
+      .single();
+
+    if (profileError) {
+      console.error('Error fetching user profile:', profileError);
+      return;
+    }
+
+    // Append the new completed level to the existing array
+    const updatedLevels = [...(profileData.completed_levels || [])];
+    if (!updatedLevels.includes(completedLevel)) {
+      updatedLevels.push(completedLevel);
+    }
+
+    // Update the profile with the new array
     const { error } = await supabase
       .from('profiles')
       .update({
-        completed_levels: supabase.sql`array_append(completed_levels, ${completedLevel})`,
+        completed_levels: updatedLevels,
         total_time: totalTime
       })
       .eq('id', user.id);

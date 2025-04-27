@@ -40,12 +40,13 @@ const Leaderboard = () => {
   const playerRank = getPlayerRank(playerCompletedCount);
 
   // Fallback data in case of error or empty response
+  // Fix: Type string for id to match LeaderboardEntry type
   const fallbackData: LeaderboardEntry[] = [
-    { id: 1, name: "Agent Shadow", completedLevels: 10, totalTime: "01:45:22", rank: "Master Cryptographer" },
-    { id: 2, name: "CodeBreaker", completedLevels: 9, totalTime: "02:10:45", rank: "Senior Agent" },
-    { id: 3, name: "CipherHunter", completedLevels: 8, totalTime: "02:30:18", rank: "Field Operative" },
-    { id: 4, name: "NightCoder", completedLevels: 7, totalTime: "02:55:40", rank: "Analyst" },
-    { id: 5, name: "BinaryPhantom", completedLevels: 6, totalTime: "03:15:50", rank: "Recruit" },
+    { id: "1", name: "Agent Shadow", completedLevels: 10, totalTime: "01:45:22", rank: "Master Cryptographer" },
+    { id: "2", name: "CodeBreaker", completedLevels: 9, totalTime: "02:10:45", rank: "Senior Agent" },
+    { id: "3", name: "CipherHunter", completedLevels: 8, totalTime: "02:30:18", rank: "Field Operative" },
+    { id: "4", name: "NightCoder", completedLevels: 7, totalTime: "02:55:40", rank: "Analyst" },
+    { id: "5", name: "BinaryPhantom", completedLevels: 6, totalTime: "03:15:50", rank: "Recruit" },
   ];
 
   // Use real data if available, otherwise use fallback
