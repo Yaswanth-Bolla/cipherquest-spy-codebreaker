@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -14,6 +15,7 @@ import Auth from "./pages/Auth";
 import LevelSelect from "./pages/LevelSelect";
 import Level from "./pages/Level";
 import Leaderboard from "./pages/Leaderboard";
+import QrTools from "./pages/QrTools";
 import NotFound from "./pages/NotFound";
 import { handleEasterEggKeydown } from '@/utils/easterEggs';
 
@@ -56,6 +58,7 @@ const App = () => {
                   <Route path="/levels" element={<LevelSelect />} />
                   <Route path="/level/:levelId" element={<Level />} />
                   <Route path="/leaderboard" element={<Leaderboard />} />
+                  <Route path="/qr-tools" element={<QrTools />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </BrowserRouter>

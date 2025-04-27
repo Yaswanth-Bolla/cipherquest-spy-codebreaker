@@ -1,4 +1,3 @@
-
 import { LevelInfo } from '@/components/game/LevelCard';
 
 export interface MissionData {
@@ -7,11 +6,19 @@ export interface MissionData {
   brief: string;
   cryptoType: string;
   difficulty: 'easy' | 'medium' | 'hard';
+  requiresLocation?: {
+    latitude: number;
+    longitude: number;
+    radiusMeters: number;
+    locationName: string;
+  };
+  requiresQrCode?: boolean;
   puzzleData: {
     challenge: string;
     hint: string[];
     solution: string;
     solutionCheck: (input: string) => boolean;
+    qrCodeValue?: string; // For QR code challenges
   };
 }
 
@@ -147,8 +154,62 @@ const level6: MissionData = {
   }
 };
 
+// Level 7: Outdoor GPS Challenge
+const level7: MissionData = {
+  id: 7,
+  title: "Operation Field Agent",
+  brief: "Intelligence suggests ENIGMA operatives have left a dead drop at a specific location. Head to the coordinates and scan the area to locate their hidden message. This is a field operation requiring you to visit a physical location.",
+  cryptoType: "GPS Location",
+  difficulty: "medium",
+  requiresLocation: {
+    latitude: 37.7749, // Default to San Francisco, agents would get real coordinates
+    longitude: -122.4194,
+    radiusMeters: 100,
+    locationName: "Mission Location"
+  },
+  puzzleData: {
+    challenge: "Reach the marked location on your map. Once there, you'll receive the decryption key.",
+    hint: [
+      "Make sure your device's location services are enabled.",
+      "You must physically be at the specified location to complete this mission.",
+      "The location coordinates would be specific to your area in a real setup."
+    ],
+    solution: "LOCATION_CONFIRMED",
+    solutionCheck: (input: string) => {
+      const normalized = input.toUpperCase().trim();
+      return normalized === "LOCATION_CONFIRMED";
+    }
+  }
+};
+
+// Level 8: QR Code Challenge
+const level8: MissionData = {
+  id: 8,
+  title: "Operation Scan & Decrypt",
+  brief: "ENIGMA has started distributing information via QR codes placed at strategic locations. Your handler has obtained one such code. Scan it to retrieve the encrypted message, then decrypt it.",
+  cryptoType: "QR + Substitution",
+  difficulty: "medium",
+  requiresQrCode: true,
+  puzzleData: {
+    challenge: "Scan the QR code to retrieve the encrypted message.",
+    hint: [
+      "You need to scan a QR code with your device camera.",
+      "The QR code would contain an encrypted message.",
+      "For demonstration: The QR code contains 'HTWJXY RTAJRJSY FY XJHWJY GFXJ'"
+    ],
+    solution: "TROOP MOVEMENT AT SECRET BASE",
+    qrCodeValue: "HTWJXY RTAJRJSY FY XJHWJY GFXJ",
+    solutionCheck: (input: string) => {
+      const normalized = input.toUpperCase().trim();
+      return normalized === "TROOP MOVEMENT AT SECRET BASE";
+    }
+  }
+};
+
 // Game levels data
-export const levels: MissionData[] = [level1, level2, level3, level4, level5, level6];
+export const levels: MissionData[] = [
+  level1, level2, level3, level4, level5, level6, level7, level8
+];
 
 // Player's game progress
 export interface GameProgress {
