@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -16,6 +15,7 @@ import LevelSelect from "./pages/LevelSelect";
 import Level from "./pages/Level";
 import Leaderboard from "./pages/Leaderboard";
 import NotFound from "./pages/NotFound";
+import { handleEasterEggKeydown } from '@/utils/easterEggs';
 
 const queryClient = new QueryClient();
 
@@ -35,6 +35,10 @@ const App = () => {
     };
 
     initializeSupabase();
+
+    // Initialize easter eggs
+    window.addEventListener('keydown', handleEasterEggKeydown);
+    return () => window.removeEventListener('keydown', handleEasterEggKeydown);
   }, []);
 
   return (

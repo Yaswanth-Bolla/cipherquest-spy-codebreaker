@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -178,5 +177,46 @@
     50% {
       opacity: 0.5;
     }
+  }
+
+  /* Easter Egg Animations */
+  .matrix-mode {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .matrix-mode::before {
+    content: "0 1 0 1";
+    font-family: monospace;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(0, 255, 70, 0.1), rgba(0, 255, 70, 0.2));
+    font-size: 1.2em;
+    letter-spacing: 0.2em;
+    color: #00ff44;
+    text-shadow: 0 0 5px #00ff44;
+    pointer-events: none;
+    animation: matrix-rain 1s linear infinite;
+    z-index: 9999;
+  }
+
+  @keyframes matrix-rain {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+  }
+
+  .agent-mode * {
+    transition: all 0.5s ease;
+    animation: spy-effect 5s ease;
+  }
+
+  @keyframes spy-effect {
+    0% { filter: grayscale(0); }
+    30% { filter: grayscale(1) contrast(150%); }
+    70% { filter: grayscale(1) contrast(150%); }
+    100% { filter: grayscale(0); }
   }
 }
