@@ -26,11 +26,11 @@ const QrCodeScanner: React.FC<QrCodeScannerProps> = ({ onScan, onClose }) => {
       setIsScanning(true);
       
       const constraints = isMobile 
-        ? { facingMode: { exact: "environment" } } // Use back camera on mobile
-        : true; // Use any camera on desktop
+        ? { facingMode: "environment" } // Use back camera on mobile
+        : { facingMode: "user" }; // Use front camera on desktop
 
       await newScanner.start(
-        { facingMode: constraints },
+        constraints,
         {
           fps: 10,
           qrbox: { width: 250, height: 250 },
