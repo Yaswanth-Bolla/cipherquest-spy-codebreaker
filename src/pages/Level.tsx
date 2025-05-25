@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
@@ -22,7 +21,7 @@ const Level = () => {
   const { levelId } = useParams<{ levelId: string }>();
   const numericLevelId = parseInt(levelId || '1', 10);
   const navigate = useNavigate();
-  const { toast } = useToast();
+  const { toast: shadcnToast } = useToast();
   const { progress, completeLevel, useHint } = useGame();
   const { 
     location, isLoading: locationLoading, requestLocation, checkLocationProximity 
@@ -41,7 +40,6 @@ const Level = () => {
   
   const levelData = levels.find(l => l.id === numericLevelId);
   
-  // Start timer when component mounts
   useEffect(() => {
     setStartTime(new Date());
     
@@ -68,7 +66,6 @@ const Level = () => {
     setShowQrScanner(false);
     setQrCodeValue(data);
     
-    // Check if the scanned QR code matches the expected value
     if (levelData.puzzleData.qrCodeValue && data === levelData.puzzleData.qrCodeValue) {
       toast.success("QR code successfully scanned!");
       setAnswer(data);
@@ -109,7 +106,6 @@ const Level = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // For location challenges, verify location first
     if (levelData.requiresLocation && !locationVerified) {
       toast.error("Location verification required", {
         description: "You need to verify your location first.",
@@ -117,7 +113,6 @@ const Level = () => {
       return;
     }
     
-    // For QR challenges, verify QR scan first
     if (levelData.requiresQrCode && !qrCodeScanned) {
       toast.error("QR code scan required", {
         description: "You need to scan the QR code first.",
@@ -126,14 +121,12 @@ const Level = () => {
     }
     
     if (levelData.puzzleData.solutionCheck(answer)) {
-      // Correct solution
       completeLevel(levelData.id);
-      toast({
+      shadcnToast({
         title: 'Mission Complete!',
         description: 'You have successfully decrypted the message.',
       });
       
-      // Navigate to next level or level select
       setTimeout(() => {
         if (levelData.id < levels.length) {
           navigate(`/level/${levelData.id + 1}`);
@@ -142,8 +135,7 @@ const Level = () => {
         }
       }, 2000);
     } else {
-      // Incorrect solution
-      toast({
+      shadcnToast({
         title: 'Decryption Failed',
         description: 'The solution is incorrect. Try again.',
         variant: 'destructive',
@@ -172,7 +164,6 @@ const Level = () => {
     navigate('/levels');
   };
   
-  // For non-mobile devices when attempting mobile-required challenges
   const renderMobileWarning = () => {
     if (!isMobile && (levelData.requiresQrCode || levelData.requiresLocation)) {
       return (
@@ -195,9 +186,7 @@ const Level = () => {
     return null;
   };
   
-  // Render special challenge UI based on mission type
   const renderSpecialChallengeUI = () => {
-    // GPS Location Challenge
     if (levelData.requiresLocation) {
       return (
         <div className="bg-black/40 border border-cipher-primary/20 p-4 rounded mb-6">
@@ -235,7 +224,6 @@ const Level = () => {
       );
     }
     
-    // QR Code Challenge
     if (levelData.requiresQrCode) {
       return (
         <div className="bg-black/40 border border-cipher-primary/20 p-4 rounded mb-6">
@@ -305,13 +293,10 @@ const Level = () => {
               {levelData.brief}
             </p>
             
-            {/* Mobile device warning */}
             {renderMobileWarning()}
             
-            {/* Special challenge UI for location/QR */}
             {renderSpecialChallengeUI()}
             
-            {/* Standard challenge content */}
             {!showQrScanner && (
               <>
                 <div className="bg-black/40 border border-cipher-primary/20 p-4 rounded font-mono text-gray-300 mb-6 scanner">
@@ -383,7 +368,6 @@ const Level = () => {
               </>
             )}
             
-            {/* QR Scanner Modal */}
             {showQrScanner && (
               <QrCodeScanner 
                 onScan={handleQrCodeScan}
