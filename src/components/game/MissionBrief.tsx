@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileText, Lock } from 'lucide-react';
+import { FileText, Lock, SkipForward } from 'lucide-react';
 
 interface MissionBriefProps {
   title: string;
@@ -28,6 +28,12 @@ const MissionBrief: React.FC<MissionBriefProps> = ({ title, content, onAccept })
     }
   }, [content, currentIndex]);
 
+  const handleSkip = () => {
+    setDisplayedContent(content);
+    setCurrentIndex(content.length);
+    setIsTyping(false);
+  };
+
   return (
     <Card className="border border-cipher-primary/50 bg-cipher-darker/80 shadow-lg shadow-cipher-primary/10 max-w-2xl mx-auto">
       <CardContent className="p-6">
@@ -41,7 +47,18 @@ const MissionBrief: React.FC<MissionBriefProps> = ({ title, content, onAccept })
           <span className={`inline-block bg-cipher-primary w-2 h-4 ml-1 ${isTyping ? 'animate-pulse' : 'hidden'}`}></span>
         </div>
         
-        <div className="flex justify-end">
+        <div className="flex justify-end gap-3">
+          {isTyping && (
+            <Button 
+              onClick={handleSkip}
+              variant="outline"
+              className="border-cipher-primary/50 text-cipher-primary hover:bg-cipher-primary/10 flex items-center gap-2"
+            >
+              <SkipForward size={16} />
+              Skip
+            </Button>
+          )}
+          
           <Button 
             onClick={onAccept} 
             disabled={isTyping}
