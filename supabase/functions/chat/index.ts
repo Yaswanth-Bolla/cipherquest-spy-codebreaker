@@ -58,7 +58,7 @@ serve(async (req) => {
     }
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${geminiApiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${geminiApiKey}`,
       {
         method: 'POST',
         headers: {
@@ -87,6 +87,7 @@ Please provide a helpful, accurate, and educational response focused on cybersec
     const data = await response.json();
     
     if (!response.ok) {
+      console.error('Gemini API error:', data);
       throw new Error(data.error?.message || 'Failed to generate response');
     }
 

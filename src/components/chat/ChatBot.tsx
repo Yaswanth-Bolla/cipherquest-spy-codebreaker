@@ -92,7 +92,7 @@ const ChatBot = () => {
         onClick={() => setIsOpen(true)}
         className={cn(
           "fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg z-40 bg-cipher-primary hover:bg-cipher-primary/90 border-2 border-cipher-primary/50",
-          "transition-all duration-300 hover:scale-110 animate-pulse-glow",
+          "transition-all duration-300 hover:scale-110",
           isOpen && "hidden"
         )}
         size="icon"
