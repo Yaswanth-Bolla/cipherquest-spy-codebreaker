@@ -100,13 +100,18 @@ const ChatBot = () => {
         <Bot className="h-6 w-6 text-cipher-dark" />
       </Button>
 
-      {/* Chat Panel */}
+      {/* Chat Panel with Background Overlay */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 pointer-events-none">
-          <div className="absolute inset-0 bg-black/20 pointer-events-auto" onClick={() => setIsOpen(false)} />
+        <div className="fixed inset-0 z-50">
+          {/* Background Overlay - Dull/Dimmed Background */}
+          <div 
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm" 
+            onClick={() => setIsOpen(false)} 
+          />
           
-          <Card className="absolute right-0 top-0 h-full w-96 max-w-[90vw] bg-cipher-darker/95 border-l-2 border-cipher-primary/50 pointer-events-auto animate-in slide-in-from-right duration-300">
-            <CardHeader className="border-b border-cipher-primary/30 bg-cipher-dark/50">
+          {/* Chat Panel - Fully Opaque */}
+          <Card className="absolute right-0 top-0 h-full w-96 max-w-[90vw] bg-cipher-darker border-l-2 border-cipher-primary/50 animate-in slide-in-from-right duration-300">
+            <CardHeader className="border-b border-cipher-primary/30 bg-cipher-dark">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Bot className="h-5 w-5 text-cipher-primary" />
@@ -163,7 +168,7 @@ const ChatBot = () => {
               </ScrollArea>
 
               {/* Input Area */}
-              <div className="border-t border-cipher-primary/30 p-4 bg-cipher-dark/50">
+              <div className="border-t border-cipher-primary/30 p-4 bg-cipher-dark">
                 <div className="flex gap-2">
                   <Input
                     value={inputMessage}
