@@ -1,9 +1,8 @@
-
 import React from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
-import { Shield } from 'lucide-react';
+import { Shield, ArrowLeft } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -92,6 +91,17 @@ const Auth = () => {
     <div className="min-h-screen flex items-center justify-center bg-cipher-darker">
       <Card className="w-full max-w-md mx-4 bg-cipher-darker border-cipher-primary/30">
         <CardHeader className="space-y-1 flex flex-col items-center">
+          <div className="flex items-center justify-between w-full mb-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate('/')}
+              className="text-cipher-light hover:bg-cipher-primary/20 hover:text-cipher-primary"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Home
+            </Button>
+          </div>
           <Shield className="w-12 h-12 text-cipher-primary mb-4" />
           <CardTitle className="text-2xl text-center">
             {isSignUp ? 'Join the Agency' : 'Welcome Back, Agent'}
