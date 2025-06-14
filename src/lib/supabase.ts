@@ -15,21 +15,26 @@ export type LeaderboardEntry = {
 
 export async function getLeaderboard(): Promise<LeaderboardEntry[]> {
   try {
+    // Since leaderboard is a view, we can query it directly
     const { data, error } = await supabase
       .from('leaderboard')
-      .select('*');
+      .select('*')
+      .order('completedlevels', { ascending: false })
+      .order('totaltime', { ascending: true });
 
     if (error) {
       console.error('Error fetching leaderboard:', error);
       return [];
     }
 
+    if (!data) return [];
+
     return data.map(entry => ({
-      id: entry.id,
-      name: entry.name,
-      completedLevels: entry.completedlevels,
-      totalTime: entry.totaltime,
-      rank: entry.rank,
+      id: entry.id || 'unknown',
+      name: entry.name || 'Anonymous Agent',
+      completedLevels: entry.completedlevels || 0,
+      totalTime: entry.totaltime || '00:00:00',
+      rank: entry.rank || 'Recruit',
       created_at: entry.created_at
     }));
   } catch (error) {
@@ -38,13 +43,16 @@ export async function getLeaderboard(): Promise<LeaderboardEntry[]> {
   }
 }
 
-// Function to update user's progress
+// Function to update user's progress in profiles table
 export async function updateUserProgress(completedLevel: number, totalTime: string): Promise<void> {
   try {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error('No authenticated user');
+    if (!user) {
+      console.log('No authenticated user, skipping progress update');
+      return;
+    }
 
-    // Fix: Instead of using supabase.sql, use a direct array append approach
+    // Get current profile data
     const { data: profileData, error: profileError } = await supabase
       .from('profiles')
       .select('completed_levels')
@@ -53,6 +61,11 @@ export async function updateUserProgress(completedLevel: number, totalTime: stri
 
     if (profileError) {
       console.error('Error fetching user profile:', profileError);
+      return;
+    }
+
+    if (!profileData) {
+      console.error('No profile data found for user');
       return;
     }
 
@@ -73,6 +86,8 @@ export async function updateUserProgress(completedLevel: number, totalTime: stri
 
     if (error) {
       console.error('Error updating user progress:', error);
+    } else {
+      console.log('Successfully updated user progress');
     }
   } catch (error) {
     console.error('Exception updating user progress:', error);
@@ -108,58 +123,13 @@ export async function updateLeaderboardEntry(completedLevels: number, totalTimeM
       return;
     }
 
-    // Get user's display name from profile or use email
-    const { data: profileData } = await supabase
-      .from('profiles')
-      .select('first_name, last_name')
-      .eq('id', user.id)
-      .single();
-
-    const displayName = profileData?.first_name && profileData?.last_name 
-      ? `${profileData.first_name} ${profileData.last_name}`
-      : user.email?.split('@')[0] || 'Anonymous Agent';
-
     const totalTime = formatTime(totalTimeMs);
     const rank = getPlayerRank(completedLevels);
 
-    // Check if user already has a leaderboard entry
-    const { data: existingEntry } = await supabase
-      .from('leaderboard')
-      .select('id')
-      .eq('user_id', user.id)
-      .single();
-
-    if (existingEntry) {
-      // Update existing entry
-      const { error } = await supabase
-        .from('leaderboard')
-        .update({
-          name: displayName,
-          completedlevels: completedLevels,
-          totaltime: totalTime,
-          rank: rank
-        })
-        .eq('user_id', user.id);
-
-      if (error) {
-        console.error('Error updating leaderboard entry:', error);
-      }
-    } else {
-      // Create new entry
-      const { error } = await supabase
-        .from('leaderboard')
-        .insert({
-          user_id: user.id,
-          name: displayName,
-          completedlevels: completedLevels,
-          totaltime: totalTime,
-          rank: rank
-        });
-
-      if (error) {
-        console.error('Error creating leaderboard entry:', error);
-      }
-    }
+    // Update user progress in profiles table
+    await updateUserProgress(completedLevels, totalTime);
+    
+    console.log('Leaderboard update completed for user:', user.email);
   } catch (error) {
     console.error('Exception updating leaderboard:', error);
   }

@@ -9,10 +9,65 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          completed_levels: number[] | null
+          created_at: string
+          current_level: number | null
+          id: string
+          name: string
+          rank: string | null
+          total_time: string | null
+        }
+        Insert: {
+          completed_levels?: number[] | null
+          created_at?: string
+          current_level?: number | null
+          id: string
+          name: string
+          rank?: string | null
+          total_time?: string | null
+        }
+        Update: {
+          completed_levels?: number[] | null
+          created_at?: string
+          current_level?: number | null
+          id?: string
+          name?: string
+          rank?: string | null
+          total_time?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
-      [_ in never]: never
+      leaderboard: {
+        Row: {
+          completedlevels: number | null
+          created_at: string | null
+          id: string | null
+          name: string | null
+          rank: string | null
+          totaltime: string | null
+        }
+        Insert: {
+          completedlevels?: never
+          created_at?: string | null
+          id?: string | null
+          name?: string | null
+          rank?: string | null
+          totaltime?: string | null
+        }
+        Update: {
+          completedlevels?: never
+          created_at?: string | null
+          id?: string | null
+          name?: string | null
+          rank?: string | null
+          totaltime?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never

@@ -1,84 +1,138 @@
 
-import React, { useState } from 'react';
-import Layout from '@/components/layout/Layout';
-import MissionBrief from '@/components/game/MissionBrief';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Shield, Play, Trophy, Settings, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useNavigate } from 'react-router-dom';
-import { FileWarning, Shield, ChevronRight, Lock } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import Layout from '@/components/layout/Layout';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Index = () => {
-  const [showBrief, setShowBrief] = useState(false);
-  const navigate = useNavigate();
+  const { user, isLoading } = useAuth();
 
-  const handleStartGame = () => {
-    setShowBrief(true);
-  };
-
-  const handleAcceptMission = () => {
-    navigate('/levels');
-  };
+  if (isLoading) {
+    return (
+      <Layout>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <Shield className="w-12 h-12 text-cipher-primary mx-auto mb-4 animate-pulse" />
+            <p>Loading...</p>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
-      <div className="min-h-[calc(100vh-200px)] flex flex-col items-center justify-center">
-        {!showBrief ? (
-          <div className="text-center max-w-3xl mx-auto">
-            <div className="mb-8 flex justify-center">
-              <Shield className="h-32 w-32 text-cipher-primary animate-pulse" />
-            </div>
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 spy-shadow">
-              <span className="text-cipher-primary">CIPHER</span>
-              <span className="text-white">QUEST</span>
-            </h1>
-            <p className="text-lg mb-8 text-gray-400 max-w-xl mx-auto typewriter">
-              The world's secrets are in your hands, agent. 
-              Can you crack the code and save the day?
-            </p>
-            
+      <div className="container mx-auto px-4 py-8">
+        {/* Hero Section */}
+        <div className="text-center mb-12">
+          <div className="flex justify-center mb-6">
+            <Shield className="w-20 h-20 text-cipher-primary" />
+          </div>
+          <h1 className="text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-cipher-primary to-cipher-secondary bg-clip-text text-transparent">
+            CipherQuest
+          </h1>
+          <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto">
+            Welcome to the ultimate cryptographic adventure. Decode secrets, solve puzzles, and become a master cryptographer.
+          </p>
+          
+          {!user ? (
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                onClick={handleStartGame}
-                className="bg-cipher-primary hover:bg-cipher-secondary text-black font-bold py-3 px-6 flex items-center gap-2"
-              >
-                <Lock size={18} />
-                Begin Operation
-                <ChevronRight size={18} />
+              <Button asChild size="lg" className="bg-cipher-primary hover:bg-cipher-secondary">
+                <Link to="/auth" className="flex items-center gap-2">
+                  <LogIn className="w-5 h-5" />
+                  Join the Agency
+                </Link>
               </Button>
-              
-              <Button 
-                variant="outline" 
-                className="border-cipher-primary/50 text-cipher-primary hover:bg-cipher-primary/10"
-              >
-                <FileWarning size={18} className="mr-2" />
-                Mission Logs
+              <Button asChild variant="outline" size="lg">
+                <Link to="/levels" className="flex items-center gap-2">
+                  <Play className="w-5 h-5" />
+                  Browse Missions
+                </Link>
               </Button>
             </div>
-            
-            <p className="text-xs text-gray-600 mt-16">
-              TOP SECRET • AUTHORIZED ACCESS ONLY
+          ) : (
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button asChild size="lg" className="bg-cipher-primary hover:bg-cipher-secondary">
+                <Link to="/levels" className="flex items-center gap-2">
+                  <Play className="w-5 h-5" />
+                  Continue Missions
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="lg">
+                <Link to="/leaderboard" className="flex items-center gap-2">
+                  <Trophy className="w-5 h-5" />
+                  View Leaderboard
+                </Link>
+              </Button>
+            </div>
+          )}
+        </div>
+
+        {/* Feature Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+          <Card className="border-cipher-primary/20 hover:border-cipher-primary/40 transition-colors">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Shield className="w-6 h-6 text-cipher-primary" />
+                50+ Missions
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription>
+                Progressive difficulty levels from basic ciphers to advanced cryptographic challenges.
+              </CardDescription>
+            </CardContent>
+          </Card>
+
+          <Card className="border-cipher-primary/20 hover:border-cipher-primary/40 transition-colors">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Trophy className="w-6 h-6 text-cipher-primary" />
+                Compete & Rank
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription>
+                Track your progress and compete with other agents on the global leaderboard.
+              </CardDescription>
+            </CardContent>
+          </Card>
+
+          <Card className="border-cipher-primary/20 hover:border-cipher-primary/40 transition-colors">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Settings className="w-6 h-6 text-cipher-primary" />
+                Learn & Grow
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription>
+                Interactive tutorials and hints help you master the art of cryptography.
+              </CardDescription>
+            </CardContent>
+          </Card>
+        </div>
+
+        {user && (
+          <div className="text-center">
+            <p className="text-muted-foreground mb-4">
+              Welcome back, Agent {user.email?.split('@')[0]}! Ready for your next mission?
             </p>
           </div>
-        ) : (
-          <MissionBrief 
-            title="Operation CipherQuest"
-            content={`\
-ATTENTION AGENT:
+        )}
 
-You have been selected for a specialized task force dedicated to cryptographic operations and intelligence gathering.
-
-Your mission, should you choose to accept it, is to break through a series of encrypted messages and codes that have been intercepted from a mysterious organization known as "The Shadow Protocol."
-
-Each level will test your abilities in different cryptographic techniques:
-
-- Classical ciphers
-- Modern encoding methods
-- Advanced encryption systems
-
-Our intelligence suggests that The Shadow Protocol is planning something big, and we need to stay one step ahead of them.
-
-Time is of the essence. Are you ready to begin?`}
-            onAccept={handleAcceptMission}
-          />
+        {!user && (
+          <div className="text-center">
+            <p className="text-muted-foreground mb-4">
+              Ready to start your journey as a cryptographic agent?
+            </p>
+            <Button asChild variant="outline">
+              <Link to="/auth">Create Your Agent Profile</Link>
+            </Button>
+          </div>
         )}
       </div>
     </Layout>
