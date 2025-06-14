@@ -14,7 +14,7 @@ import QrCodeScanner from '@/components/game/QrCodeScanner';
 import { toast } from 'sonner';
 import { 
   Lightbulb, CheckCircle2, ChevronLeft, Timer, RotateCcw,
-  MapPin, Navigation, QrCode, Smartphone 
+  MapPin, Navigation, QrCode, Smartphone, ArrowRight
 } from 'lucide-react';
 
 const Level = () => {
@@ -37,6 +37,7 @@ const Level = () => {
   const [qrCodeScanned, setQrCodeScanned] = useState(false);
   const [qrCodeValue, setQrCodeValue] = useState('');
   const [locationVerified, setLocationVerified] = useState(false);
+  const [isLevelCompleted, setIsLevelCompleted] = useState(false);
   
   const levelData = levels.find(l => l.id === numericLevelId);
   
@@ -56,6 +57,17 @@ const Level = () => {
     
     return () => clearInterval(timerInterval);
   }, [startTime]);
+
+  // Clear answer when navigating to a new level
+  useEffect(() => {
+    setAnswer('');
+    setIsLevelCompleted(false);
+    setQrCodeScanned(false);
+    setQrCodeValue('');
+    setLocationVerified(false);
+    setShowHint(false);
+    setHintIndex(0);
+  }, [numericLevelId]);
   
   if (!levelData) {
     return <div>Level not found</div>;
@@ -122,18 +134,11 @@ const Level = () => {
     
     if (levelData.puzzleData.solutionCheck(answer)) {
       completeLevel(levelData.id);
+      setIsLevelCompleted(true);
       shadcnToast({
         title: 'Mission Complete!',
         description: 'You have successfully decrypted the message.',
       });
-      
-      setTimeout(() => {
-        if (levelData.id < levels.length) {
-          navigate(`/level/${levelData.id + 1}`);
-        } else {
-          navigate('/levels');
-        }
-      }, 2000);
     } else {
       shadcnToast({
         title: 'Decryption Failed',
@@ -296,83 +301,102 @@ const Level = () => {
             {renderMobileWarning()}
             
             {renderSpecialChallengeUI()}
-            
-            {!showQrScanner && (
-              <>
-                <div className="bg-black/40 border border-cipher-primary/20 p-4 rounded font-mono text-gray-300 mb-6 scanner">
-                  <h3 className="text-sm text-cipher-secondary mb-2">ENCRYPTED MESSAGE:</h3>
-                  <div className="whitespace-pre-wrap break-words">
-                    {levelData.puzzleData.challenge}
-                  </div>
-                </div>
+
+            {isLevelCompleted ? (
+              <div className="text-center py-8">
+                <CheckCircle2 className="w-16 h-16 text-green-500 mx-auto mb-4" />
+                <h2 className="text-xl font-bold text-green-500 mb-2">Mission Accomplished!</h2>
+                <p className="text-gray-300 mb-6">You have successfully completed this operation.</p>
                 
-                {showHint && (
-                  <div className="bg-yellow-900/20 border border-yellow-600/30 p-4 rounded mb-6">
-                    <div className="flex items-start">
-                      <Lightbulb className="text-yellow-500 mr-2 mt-1" size={18} />
-                      <div>
-                        <h3 className="text-sm text-yellow-500 mb-1">HINT {hintIndex + 1}/{levelData.puzzleData.hint.length}:</h3>
-                        <p className="text-gray-300 text-sm">{levelData.puzzleData.hint[hintIndex]}</p>
+                <Button 
+                  onClick={handleAdvanceToNext}
+                  className="bg-cipher-primary hover:bg-cipher-secondary text-black"
+                  size="lg"
+                >
+                  <ArrowRight className="mr-2" size={16} />
+                  {levelData.id < levels.length ? 'Advance to Next Operation' : 'Return to Mission Control'}
+                </Button>
+              </div>
+            ) : (
+              <>
+                {!showQrScanner && (
+                  <>
+                    <div className="bg-black/40 border border-cipher-primary/20 p-4 rounded font-mono text-gray-300 mb-6 scanner">
+                      <h3 className="text-sm text-cipher-secondary mb-2">ENCRYPTED MESSAGE:</h3>
+                      <div className="whitespace-pre-wrap break-words">
+                        {levelData.puzzleData.challenge}
                       </div>
                     </div>
-                  </div>
+                    
+                    {showHint && (
+                      <div className="bg-yellow-900/20 border border-yellow-600/30 p-4 rounded mb-6">
+                        <div className="flex items-start">
+                          <Lightbulb className="text-yellow-500 mr-2 mt-1" size={18} />
+                          <div>
+                            <h3 className="text-sm text-yellow-500 mb-1">HINT {hintIndex + 1}/{levelData.puzzleData.hint.length}:</h3>
+                            <p className="text-gray-300 text-sm">{levelData.puzzleData.hint[hintIndex]}</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    
+                    <form onSubmit={handleSubmit}>
+                      <div className="mb-4">
+                        <label htmlFor="answer" className="block text-sm text-gray-400 mb-2">
+                          Enter your decrypted message:
+                        </label>
+                        <Textarea 
+                          id="answer"
+                          value={answer}
+                          onChange={(e) => setAnswer(e.target.value)}
+                          className="bg-black/50 border-cipher-primary/30 text-white font-mono"
+                          rows={4}
+                          required
+                        />
+                      </div>
+                      
+                      <div className="flex flex-wrap gap-3 justify-between mt-6">
+                        <div className="flex gap-3">
+                          <Button 
+                            type="button"
+                            variant="outline"
+                            onClick={handleShowHint}
+                            className="border-yellow-600/50 text-yellow-500 hover:bg-yellow-900/20"
+                          >
+                            <Lightbulb className="mr-2" size={16} />
+                            {!showHint ? 'Request Hint' : 'Next Hint'}
+                          </Button>
+                          
+                          <Button 
+                            type="button"
+                            variant="ghost"
+                            onClick={handleReset}
+                            className="text-gray-400"
+                          >
+                            <RotateCcw className="mr-2" size={16} />
+                            Reset
+                          </Button>
+                        </div>
+                        
+                        <Button 
+                          type="submit"
+                          className="bg-cipher-primary hover:bg-cipher-secondary text-black"
+                        >
+                          <CheckCircle2 className="mr-2" size={16} />
+                          Submit Solution
+                        </Button>
+                      </div>
+                    </form>
+                  </>
                 )}
                 
-                <form onSubmit={handleSubmit}>
-                  <div className="mb-4">
-                    <label htmlFor="answer" className="block text-sm text-gray-400 mb-2">
-                      Enter your decrypted message:
-                    </label>
-                    <Textarea 
-                      id="answer"
-                      value={answer}
-                      onChange={(e) => setAnswer(e.target.value)}
-                      className="bg-black/50 border-cipher-primary/30 text-white font-mono"
-                      rows={4}
-                      required
-                    />
-                  </div>
-                  
-                  <div className="flex flex-wrap gap-3 justify-between mt-6">
-                    <div className="flex gap-3">
-                      <Button 
-                        type="button"
-                        variant="outline"
-                        onClick={handleShowHint}
-                        className="border-yellow-600/50 text-yellow-500 hover:bg-yellow-900/20"
-                      >
-                        <Lightbulb className="mr-2" size={16} />
-                        {!showHint ? 'Request Hint' : 'Next Hint'}
-                      </Button>
-                      
-                      <Button 
-                        type="button"
-                        variant="ghost"
-                        onClick={handleReset}
-                        className="text-gray-400"
-                      >
-                        <RotateCcw className="mr-2" size={16} />
-                        Reset
-                      </Button>
-                    </div>
-                    
-                    <Button 
-                      type="submit"
-                      className="bg-cipher-primary hover:bg-cipher-secondary text-black"
-                    >
-                      <CheckCircle2 className="mr-2" size={16} />
-                      Submit Solution
-                    </Button>
-                  </div>
-                </form>
+                {showQrScanner && (
+                  <QrCodeScanner 
+                    onScan={handleQrCodeScan}
+                    onClose={() => setShowQrScanner(false)}
+                  />
+                )}
               </>
-            )}
-            
-            {showQrScanner && (
-              <QrCodeScanner 
-                onScan={handleQrCodeScan}
-                onClose={() => setShowQrScanner(false)}
-              />
             )}
           </CardContent>
         </Card>
