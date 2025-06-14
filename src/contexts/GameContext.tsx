@@ -1,6 +1,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { GameProgress, initialGameProgress, levels } from '@/utils/gameData';
+import { updateLeaderboardEntry } from '@/lib/supabase';
 
 interface GameContextType {
   progress: GameProgress;
@@ -52,13 +53,32 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
       const nextLevel = Math.min(levelId + 1, levels.length);
       const currentLevel = Math.max(prev.currentLevel, nextLevel);
       
-      return {
+      const newProgress = {
         ...prev,
         completedLevels,
         completionDates,
         currentLevel,
       };
+
+      // Calculate total time spent (simple estimation based on completion dates)
+      const totalTimeMs = calculateTotalTime(completionDates);
+      
+      // Update leaderboard asynchronously
+      updateLeaderboardEntry(completedLevels.length, totalTimeMs)
+        .catch(error => console.error('Failed to update leaderboard:', error));
+      
+      return newProgress;
     });
+  };
+
+  // Simple function to calculate total time based on completion dates
+  const calculateTotalTime = (completionDates: Record<number, string>): number => {
+    const dates = Object.values(completionDates).map(date => new Date(date).getTime());
+    if (dates.length < 2) return 300000; // Default 5 minutes for first level
+    
+    const earliest = Math.min(...dates);
+    const latest = Math.max(...dates);
+    return latest - earliest + 300000; // Add base time for each level
   };
 
   const useHint = (levelId: number) => {

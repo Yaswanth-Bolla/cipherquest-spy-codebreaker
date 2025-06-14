@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Layout from '@/components/layout/Layout';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Trophy, Medal, Award, Clock, Star, Loader2 } from 'lucide-react';
+import { Trophy, Medal, Award, Clock, Star, Loader2, RefreshCw } from 'lucide-react';
 import { useGame } from '@/contexts/GameContext';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { getLeaderboard, LeaderboardEntry } from '@/lib/supabase';
 import {
   Table,
@@ -19,20 +20,21 @@ import {
 
 const Leaderboard = () => {
   const { progress } = useGame();
-  const [isLocalUser, setIsLocalUser] = useState(true);
   
-  // Fetch leaderboard data from Supabase
-  const { data: leaderboardData, isLoading, error } = useQuery({
+  // Fetch leaderboard data from Supabase with auto-refresh
+  const { data: leaderboardData, isLoading, error, refetch } = useQuery({
     queryKey: ['leaderboard'],
     queryFn: getLeaderboard,
+    refetchInterval: 30000, // Refresh every 30 seconds
   });
 
   // Calculate player rank based on completed missions
   const getPlayerRank = (completedCount: number) => {
-    if (completedCount >= 9) return "Master Cryptographer";
-    if (completedCount >= 7) return "Senior Agent";
-    if (completedCount >= 5) return "Field Operative";
-    if (completedCount >= 3) return "Analyst";
+    if (completedCount >= 45) return "Master Cryptographer";
+    if (completedCount >= 35) return "Senior Agent";
+    if (completedCount >= 25) return "Field Operative";
+    if (completedCount >= 15) return "Analyst";
+    if (completedCount >= 5) return "Junior Agent";
     return "Recruit";
   };
 
@@ -40,17 +42,24 @@ const Leaderboard = () => {
   const playerRank = getPlayerRank(playerCompletedCount);
 
   // Fallback data in case of error or empty response
-  // Fix: Type string for id to match LeaderboardEntry type
   const fallbackData: LeaderboardEntry[] = [
-    { id: "1", name: "Agent Shadow", completedLevels: 10, totalTime: "01:45:22", rank: "Master Cryptographer" },
-    { id: "2", name: "CodeBreaker", completedLevels: 9, totalTime: "02:10:45", rank: "Senior Agent" },
-    { id: "3", name: "CipherHunter", completedLevels: 8, totalTime: "02:30:18", rank: "Field Operative" },
-    { id: "4", name: "NightCoder", completedLevels: 7, totalTime: "02:55:40", rank: "Analyst" },
-    { id: "5", name: "BinaryPhantom", completedLevels: 6, totalTime: "03:15:50", rank: "Recruit" },
+    { id: "1", name: "Agent Shadow", completedLevels: 42, totalTime: "03:45:22", rank: "Master Cryptographer" },
+    { id: "2", name: "CodeBreaker", completedLevels: 38, totalTime: "04:10:45", rank: "Senior Agent" },
+    { id: "3", name: "CipherHunter", completedLevels: 35, totalTime: "04:30:18", rank: "Senior Agent" },
+    { id: "4", name: "NightCoder", completedLevels: 28, totalTime: "05:55:40", rank: "Field Operative" },
+    { id: "5", name: "BinaryPhantom", completedLevels: 22, totalTime: "06:15:50", rank: "Analyst" },
   ];
 
   // Use real data if available, otherwise use fallback
   const displayData = (leaderboardData && leaderboardData.length > 0) ? leaderboardData : fallbackData;
+
+  // Sort by completed levels (descending) then by total time (ascending)
+  const sortedData = [...displayData].sort((a, b) => {
+    if (a.completedLevels !== b.completedLevels) {
+      return b.completedLevels - a.completedLevels;
+    }
+    return a.totalTime.localeCompare(b.totalTime);
+  });
 
   return (
     <Layout>
@@ -60,6 +69,16 @@ const Leaderboard = () => {
             <Trophy className="text-yellow-500 mr-3" size={28} />
             <h1 className="text-2xl font-bold">Agent Leaderboard</h1>
           </div>
+          
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => refetch()}
+            className="flex items-center gap-2"
+          >
+            <RefreshCw size={16} />
+            Refresh
+          </Button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -67,6 +86,9 @@ const Leaderboard = () => {
           <Card className="col-span-1 lg:col-span-2">
             <CardHeader className="border-b">
               <h2 className="text-lg font-semibold">Top Field Agents</h2>
+              <p className="text-sm text-muted-foreground">
+                Complete missions to see your name here!
+              </p>
             </CardHeader>
             <CardContent className="p-0">
               {isLoading ? (
@@ -76,6 +98,9 @@ const Leaderboard = () => {
               ) : error ? (
                 <div className="text-center py-8 text-red-500">
                   <p>Error loading leaderboard data.</p>
+                  <Button variant="outline" onClick={() => refetch()} className="mt-2">
+                    Try Again
+                  </Button>
                 </div>
               ) : (
                 <Table>
@@ -89,7 +114,7 @@ const Leaderboard = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {displayData.map((agent, index) => (
+                    {sortedData.map((agent, index) => (
                       <TableRow key={agent.id} className="hover:bg-cipher-primary/10">
                         <TableCell className="font-medium">
                           {index === 0 ? (
@@ -103,7 +128,7 @@ const Leaderboard = () => {
                           )}
                         </TableCell>
                         <TableCell>{agent.name}</TableCell>
-                        <TableCell className="hidden sm:table-cell">{agent.completedLevels}/10</TableCell>
+                        <TableCell className="hidden sm:table-cell">{agent.completedLevels}/50</TableCell>
                         <TableCell className="hidden md:table-cell">
                           <span className="flex items-center gap-1">
                             <Clock size={14} /> {agent.totalTime}
@@ -115,7 +140,7 @@ const Leaderboard = () => {
                       </TableRow>
                     ))}
                   </TableBody>
-                  {displayData.length === 0 && (
+                  {sortedData.length === 0 && (
                     <TableCaption>No leaderboard data available</TableCaption>
                   )}
                 </Table>
@@ -141,18 +166,18 @@ const Leaderboard = () => {
                   <div>
                     <div className="flex justify-between text-sm mb-1">
                       <span className="text-muted-foreground">Missions Completed</span>
-                      <span className="text-cipher-primary">{playerCompletedCount}/10</span>
+                      <span className="text-cipher-primary">{playerCompletedCount}/50</span>
                     </div>
                     <div className="h-2 bg-secondary rounded-full">
                       <div 
                         className="h-full bg-cipher-primary rounded-full"
-                        style={{ width: `${(playerCompletedCount / 10) * 100}%` }}
+                        style={{ width: `${(playerCompletedCount / 50) * 100}%` }}
                       ></div>
                     </div>
                   </div>
                   
                   <div className="text-center text-xs text-muted-foreground mt-4">
-                    Complete more missions to increase your rank
+                    Complete more missions to increase your rank and appear on the leaderboard
                   </div>
                 </div>
               </div>
