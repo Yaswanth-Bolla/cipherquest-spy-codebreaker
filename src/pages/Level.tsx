@@ -164,18 +164,6 @@ const Level = () => {
     setLocationVerified(false);
   };
   
-  const renderMobileWarning = () => {
-    if (!isMobile && (levelData.requiresQrCode || levelData.requiresLocation)) {
-      return (
-        <MobileWarning 
-          requiresLocation={!!levelData.requiresLocation}
-          requiresQrCode={!!levelData.requiresQrCode}
-        />
-      );
-    }
-    return null;
-  };
-  
   return (
     <Layout>
       <div className="max-w-4xl mx-auto">
@@ -190,7 +178,12 @@ const Level = () => {
               {levelData.brief}
             </p>
             
-            {renderMobileWarning()}
+            {!isMobile && (levelData.requiresQrCode || levelData.requiresLocation) && (
+              <MobileWarning 
+                requiresLocation={!!levelData.requiresLocation}
+                requiresQrCode={!!levelData.requiresQrCode}
+              />
+            )}
             
             <SpecialChallengeUI
               requiresLocation={levelData.requiresLocation}
