@@ -166,11 +166,11 @@ const Leaderboard = () => {
                   <div>
                     <div className="flex justify-between text-sm mb-1">
                       <span className="text-muted-foreground">Missions Completed</span>
-                      <span className="text-cipher-primary">{playerCompletedCount}/50</span>
+                      <span className="text-cyan-400 font-bold">{playerCompletedCount}/50</span>
                     </div>
-                    <div className="h-2 bg-secondary rounded-full">
+                    <div className="h-3 bg-gray-700 rounded-full border border-gray-600">
                       <div 
-                        className="h-full bg-cipher-primary rounded-full"
+                        className="h-full bg-gradient-to-r from-cyan-400 to-cyan-300 rounded-full shadow-lg"
                         style={{ width: `${(playerCompletedCount / 50) * 100}%` }}
                       ></div>
                     </div>
