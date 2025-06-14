@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Shield, Play, Trophy, Settings, LogIn } from 'lucide-react';
+import { Shield, Play, Trophy, Settings, LogIn, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Layout from '@/components/layout/Layout';
@@ -46,11 +46,11 @@ const Index = () => {
                   Join the Agency
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg">
-                <Link to="/levels" className="flex items-center gap-2">
+              <Button asChild variant="outline" size="lg" disabled>
+                <span className="flex items-center gap-2 opacity-50">
                   <Play className="w-5 h-5" />
-                  Browse Missions
-                </Link>
+                  Sign In to View Missions
+                </span>
               </Button>
             </div>
           ) : (
@@ -116,22 +116,31 @@ const Index = () => {
           </Card>
         </div>
 
-        {user && (
+        {/* Authentication-based content */}
+        {user ? (
           <div className="text-center">
             <p className="text-muted-foreground mb-4">
               Welcome back, Agent {user.email?.split('@')[0]}! Ready for your next mission?
             </p>
           </div>
-        )}
-
-        {!user && (
+        ) : (
           <div className="text-center">
-            <p className="text-muted-foreground mb-4">
-              Ready to start your journey as a cryptographic agent?
-            </p>
-            <Button asChild variant="outline">
-              <Link to="/auth">Create Your Agent Profile</Link>
-            </Button>
+            <Card className="max-w-md mx-auto border-cipher-primary/30">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 justify-center">
+                  <Users className="w-6 h-6 text-cipher-primary" />
+                  Join the Elite Agents
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="mb-4">
+                  Sign in to track your progress, compete on the leaderboard, and unlock exclusive missions.
+                </CardDescription>
+                <Button asChild className="w-full bg-cipher-primary hover:bg-cipher-secondary">
+                  <Link to="/auth">Create Your Agent Profile</Link>
+                </Button>
+              </CardContent>
+            </Card>
           </div>
         )}
       </div>

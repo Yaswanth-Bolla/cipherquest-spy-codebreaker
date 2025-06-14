@@ -17,6 +17,7 @@ import Level from "./pages/Level";
 import Leaderboard from "./pages/Leaderboard";
 import QrTools from "./pages/QrTools";
 import NotFound from "./pages/NotFound";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
 import { handleEasterEggKeydown } from '@/utils/easterEggs';
 
 const queryClient = new QueryClient();
@@ -55,10 +56,26 @@ const App = () => {
                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/auth" element={<Auth />} />
-                  <Route path="/levels" element={<LevelSelect />} />
-                  <Route path="/level/:levelId" element={<Level />} />
-                  <Route path="/leaderboard" element={<Leaderboard />} />
-                  <Route path="/qr-tools" element={<QrTools />} />
+                  <Route path="/levels" element={
+                    <ProtectedRoute>
+                      <LevelSelect />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/level/:levelId" element={
+                    <ProtectedRoute>
+                      <Level />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/leaderboard" element={
+                    <ProtectedRoute>
+                      <Leaderboard />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/qr-tools" element={
+                    <ProtectedRoute>
+                      <QrTools />
+                    </ProtectedRoute>
+                  } />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </BrowserRouter>
