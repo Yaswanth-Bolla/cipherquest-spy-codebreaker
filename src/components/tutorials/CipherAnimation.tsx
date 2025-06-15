@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -139,7 +138,7 @@ const CipherAnimation: React.FC<CipherAnimationProps> = ({ type }) => {
         { text: 'A: .-  B: -...  C: -.-.  D: -..', highlight: [] },
         { text: 'E: .   F: ..-.  G: --.   H: ....', highlight: [] },
         { text: 'I: ..  J: .---  K: -.-   L: .-..', highlight: [] },
-        { text: 'M: --  N: -.    O: ---   P: .--.' highlight: [] },
+        { text: 'M: --  N: -.    O: ---   P: .--.', highlight: [] },
         { text: 'Example: SOS = ... --- ...', highlight: [] }
       ]
     }
