@@ -78,10 +78,10 @@ const level3: MissionData = {
       "A=1, B=2, C=3... Z=26",
       "Dashes separate numbers, spaces separate words.",
     ],
-    solution: "BANK VAULTS AT MIDNIGHT",
+    solution: "BANK VAULT AT MIDNIGHT",
     solutionCheck: (input: string) => {
       const normalized = input.toUpperCase().trim();
-      return normalized === "BANK VAULTS AT MIDNIGHT";
+      return normalized === "BANK VAULT AT MIDNIGHT";
     }
   }
 };
