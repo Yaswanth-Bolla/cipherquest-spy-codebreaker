@@ -12,6 +12,7 @@ import { setupSupabaseSchema } from "@/lib/setupSupabase";
 import { toast } from "sonner";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
+import Tutorials from "./pages/Tutorials";
 import LevelSelect from "./pages/LevelSelect";
 import Level from "./pages/Level";
 import Leaderboard from "./pages/Leaderboard";

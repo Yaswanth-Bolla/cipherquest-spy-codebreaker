@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Shield, Play, Trophy, Settings, LogIn, Users } from 'lucide-react';
@@ -122,6 +121,14 @@ const Index = () => {
             <p className="text-muted-foreground mb-4">
               Welcome back, Agent {user.user_metadata?.name || 'Anonymous'}! Ready for your next mission?
             </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6">
+              <Button asChild variant="outline" size="lg">
+                <Link to="/tutorials" className="flex items-center gap-2">
+                  <Settings className="w-5 h-5" />
+                  Interactive Tutorials
+                </Link>
+              </Button>
+            </div>
           </div>
         ) : (
           <div className="text-center">
