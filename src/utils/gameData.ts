@@ -1,4 +1,3 @@
-
 import { LevelInfo } from '@/components/game/LevelCard';
 
 export interface MissionData {
@@ -158,16 +157,16 @@ const level7: MissionData = {
   cryptoType: "Vigenère Cipher",
   difficulty: "medium",
   puzzleData: {
-    challenge: "LPAVRW MW HBX FHTK UIPXS VN GUM. HTVVLK XH MZY GVOHM VNCX.",
+    challenge: "JKEREHTCCI SO DHY FIP GNVAZRIWWO SH WTSDEEPD",
     hint: [
       "In Vigenère cipher, you need a keyword that repeats to encrypt the message.",
       "Each letter in the keyword shifts the corresponding letter in the plaintext by a different amount.",
       "Try using 'SHADOW' as the key.",
     ],
-    solution: "REPORT TO THE BACK ALLEY AT 9PM. ARRIVE AT THE NORTH GATE.",
+    solution: "RENDEZVOUS AT THE OLD CLOCKTOWER AT MIDNIGHT",
     solutionCheck: (input: string) => {
       const normalized = input.toUpperCase().trim();
-      return normalized === "REPORT TO THE BACK ALLEY AT 9PM. ARRIVE AT THE NORTH GATE.";
+      return normalized === "RENDEZVOUS AT THE OLD CLOCKTOWER AT MIDNIGHT";
     }
   }
 };
