@@ -120,7 +120,7 @@ const Index = () => {
         {user ? (
           <div className="text-center">
             <p className="text-muted-foreground mb-4">
-              Welcome back, Agent {user.email?.split('@')[0]}! Ready for your next mission?
+              Welcome back, Agent {user.user_metadata?.name || 'Anonymous'}! Ready for your next mission?
             </p>
           </div>
         ) : (
