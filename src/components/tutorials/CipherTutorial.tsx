@@ -6,7 +6,6 @@ import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle, Circle, ArrowRight, RotateCcw } from 'lucide-react';
-import { caesarCipher, vigenereCipher, base64Encode, base64Decode, hexEncode, hexDecode } from '@/utils/cryptoHelpers';
 
 interface Step {
   id: number;
@@ -48,48 +47,102 @@ const tutorialData: TutorialData = {
         expectedOutput: 'WORLD',
         hint: 'Each letter moves 3 positions backward: Z→W, R→O, U→R, O→L, G→D',
         type: 'decode'
-      },
-      {
-        id: 3,
-        title: 'Mixed Case Challenge',
-        instruction: 'Encode "Hello World" using a Caesar cipher with shift 5',
-        input: 'Hello World',
-        expectedOutput: 'Mjqqt Btwqi',
-        hint: 'Preserve the case and spaces. Only letters are shifted.',
-        type: 'encode'
       }
     ]
   },
-  vigenere: {
-    title: 'Vigenère Cipher Tutorial',
-    description: 'Master the polyalphabetic Vigenère cipher',
+  'text-reversal': {
+    title: 'Text Reversal Tutorial',
+    description: 'Learn to reverse text for simple encoding',
     steps: [
       {
         id: 1,
-        title: 'Simple Encoding',
-        instruction: 'Encode "HELLO" using Vigenère cipher with key "KEY"',
-        input: 'HELLO',
-        expectedOutput: 'RIJVS',
-        hint: 'H+K=R, E+E=I, L+Y=J, L+K=V, O+E=S (using Vigenère table)',
+        title: 'Word Reversal',
+        instruction: 'Reverse each word: "HELLO WORLD"',
+        input: 'HELLO WORLD',
+        expectedOutput: 'OLLEH DLROW',
+        hint: 'Reverse each word individually, keeping spaces',
         type: 'encode'
       },
       {
         id: 2,
-        title: 'Decoding Practice',
-        instruction: 'Decode "RIJVS" using Vigenère cipher with key "KEY"',
-        input: 'RIJVS',
-        expectedOutput: 'HELLO',
-        hint: 'R-K=H, I-E=E, J-Y=L, V-K=L, S-E=O',
+        title: 'Decode Reversed Text',
+        instruction: 'Decode "TERCES EGASSEM"',
+        input: 'TERCES EGASSEM',
+        expectedOutput: 'SECRET MESSAGE',
+        hint: 'Reverse each word to get the original message',
         type: 'decode'
+      }
+    ]
+  },
+  a1z26: {
+    title: 'A1Z26 Cipher Tutorial',
+    description: 'Convert letters to numbers and back',
+    steps: [
+      {
+        id: 1,
+        title: 'Letters to Numbers',
+        instruction: 'Encode "CAB" using A1Z26',
+        input: 'CAB',
+        expectedOutput: '3-1-2',
+        hint: 'C=3, A=1, B=2. Separate with dashes.',
+        type: 'encode'
       },
       {
-        id: 3,
-        title: 'Longer Message',
-        instruction: 'Encode "CRYPTOGRAPHY" using Vigenère cipher with key "SECRET"',
-        input: 'CRYPTOGRAPHY',
-        expectedOutput: 'UVASDTJZGFR',
-        hint: 'The key "SECRET" repeats: SECRETSECRE to match the message length',
+        id: 2,
+        title: 'Numbers to Letters',
+        instruction: 'Decode "8-5-12-12-15"',
+        input: '8-5-12-12-15',
+        expectedOutput: 'HELLO',
+        hint: '8=H, 5=E, 12=L, 12=L, 15=O',
+        type: 'decode'
+      }
+    ]
+  },
+  binary: {
+    title: 'Binary Code Tutorial',
+    description: 'Convert text to binary and back using ASCII',
+    steps: [
+      {
+        id: 1,
+        title: 'Text to Binary',
+        instruction: 'Encode "HI" to binary',
+        input: 'HI',
+        expectedOutput: '01001000 01001001',
+        hint: 'H=72=01001000, I=73=01001001',
         type: 'encode'
+      },
+      {
+        id: 2,
+        title: 'Binary to Text',
+        instruction: 'Decode "01001111 01001011"',
+        input: '01001111 01001011',
+        expectedOutput: 'OK',
+        hint: '01001111=79=O, 01001011=75=K',
+        type: 'decode'
+      }
+    ]
+  },
+  morse: {
+    title: 'Morse Code Tutorial',
+    description: 'Learn dots and dashes communication',
+    steps: [
+      {
+        id: 1,
+        title: 'Text to Morse',
+        instruction: 'Encode "SOS" to Morse code',
+        input: 'SOS',
+        expectedOutput: '... --- ...',
+        hint: 'S=..., O=---, S=...',
+        type: 'encode'
+      },
+      {
+        id: 2,
+        title: 'Morse to Text',
+        instruction: 'Decode ".... .."',
+        input: '.... ..',
+        expectedOutput: 'HI',
+        hint: '....=H, ..=I',
+        type: 'decode'
       }
     ]
   },
@@ -114,15 +167,54 @@ const tutorialData: TutorialData = {
         expectedOutput: 'World',
         hint: 'The = at the end is padding to make the length a multiple of 4',
         type: 'decode'
+      }
+    ]
+  },
+  vigenere: {
+    title: 'Vigenère Cipher Tutorial',
+    description: 'Master the polyalphabetic Vigenère cipher',
+    steps: [
+      {
+        id: 1,
+        title: 'Simple Encoding',
+        instruction: 'Encode "HELLO" using Vigenère cipher with key "KEY"',
+        input: 'HELLO',
+        expectedOutput: 'RIJVS',
+        hint: 'H+K=R, E+E=I, L+Y=J, L+K=V, O+E=S (using Vigenère table)',
+        type: 'encode'
       },
       {
-        id: 3,
-        title: 'Phrase Encoding',
-        instruction: 'Encode "Secret Message" to Base64',
-        input: 'Secret Message',
-        expectedOutput: 'U2VjcmV0IE1lc3NhZ2U=',
-        hint: 'Spaces and special characters are preserved in Base64 encoding',
+        id: 2,
+        title: 'Decoding Practice',
+        instruction: 'Decode "RIJVS" using Vigenère cipher with key "KEY"',
+        input: 'RIJVS',
+        expectedOutput: 'HELLO',
+        hint: 'R-K=H, I-E=E, J-Y=L, V-K=L, S-E=O',
+        type: 'decode'
+      }
+    ]
+  },
+  'rail-fence': {
+    title: 'Rail Fence Cipher Tutorial',
+    description: 'Learn zigzag pattern encryption',
+    steps: [
+      {
+        id: 1,
+        title: 'Three Rail Encoding',
+        instruction: 'Encode "HELLO" using 3 rails',
+        input: 'HELLO',
+        expectedOutput: 'HOELL',
+        hint: 'Write in zigzag: H.L.O, .E., read rails: H.L.O + E + empty = HOELL',
         type: 'encode'
+      },
+      {
+        id: 2,
+        title: 'Decode Rail Fence',
+        instruction: 'Decode "WECRLTEERDSOEEFEAOCAIVDEN" (3 rails)',
+        input: 'WECRLTEERDSOEEFEAOCAIVDEN',
+        expectedOutput: 'WEAREDISCOVEREDFLEEEATONCE',
+        hint: 'Arrange on 3 rails and read in zigzag pattern',
+        type: 'decode'
       }
     ]
   },
@@ -147,18 +239,134 @@ const tutorialData: TutorialData = {
         expectedOutput: 'Hello',
         hint: 'Split into pairs: 48=H, 65=e, 6c=l, 6c=l, 6f=o',
         type: 'decode'
+      }
+    ]
+  },
+  atbash: {
+    title: 'Atbash Cipher Tutorial',
+    description: 'Learn the ancient mirror alphabet cipher',
+    steps: [
+      {
+        id: 1,
+        title: 'Basic Atbash Encoding',
+        instruction: 'Encode "HELLO" using Atbash',
+        input: 'HELLO',
+        expectedOutput: 'SVOOL',
+        hint: 'A↔Z, B↔Y, C↔X... so H↔S, E↔V, L↔O, L↔O, O↔L',
+        type: 'encode'
       },
       {
-        id: 3,
-        title: 'Message Encoding',
-        instruction: 'Encode "Test" to hexadecimal',
-        input: 'Test',
-        expectedOutput: '54657374',
-        hint: 'T=54, e=65, s=73, t=74 in hex',
+        id: 2,
+        title: 'Atbash Decoding',
+        instruction: 'Decode "KILM" using Atbash',
+        input: 'KILM',
+        expectedOutput: 'PRON',
+        hint: 'Apply the same mirror transformation: K↔P, I↔R, L↔O, M↔N',
+        type: 'decode'
+      }
+    ]
+  },
+  rot13: {
+    title: 'ROT13 Tutorial',
+    description: 'Learn the rotation cipher',
+    steps: [
+      {
+        id: 1,
+        title: 'ROT13 Encoding',
+        instruction: 'Encode "HELLO" using ROT13',
+        input: 'HELLO',
+        expectedOutput: 'URYYB',
+        hint: 'Shift each letter 13 positions: H→U, E→R, L→Y, L→Y, O→B',
         type: 'encode'
+      },
+      {
+        id: 2,
+        title: 'ROT13 Decoding',
+        instruction: 'Decode "JBEYQ" using ROT13',
+        input: 'JBEYQ',
+        expectedOutput: 'WORLD',
+        hint: 'ROT13 is self-reciprocal - apply ROT13 again to decode',
+        type: 'decode'
       }
     ]
   }
+};
+
+// Simple cipher implementations for validation
+const processAnswer = (input: string, type: 'encode' | 'decode', tutorialId: string): string => {
+  switch (tutorialId) {
+    case 'caesar':
+      return caesarCipher(input, 3, type === 'decode');
+    case 'text-reversal':
+      return input.split(' ').map(word => word.split('').reverse().join('')).join(' ');
+    case 'a1z26':
+      if (type === 'encode') {
+        return input.toUpperCase().split('').filter(c => /[A-Z]/.test(c))
+          .map(c => (c.charCodeAt(0) - 64).toString()).join('-');
+      } else {
+        return input.split('-').map(n => String.fromCharCode(parseInt(n) + 64)).join('');
+      }
+    case 'binary':
+      if (type === 'encode') {
+        return input.split('').map(c => c.charCodeAt(0).toString(2).padStart(8, '0')).join(' ');
+      } else {
+        return input.split(' ').map(b => String.fromCharCode(parseInt(b, 2))).join('');
+      }
+    case 'morse':
+      const morseMap: {[key: string]: string} = {
+        'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.',
+        'G': '--.', 'H': '....', 'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..',
+        'M': '--', 'N': '-.', 'O': '---', 'P': '.--.', 'Q': '--.-', 'R': '.-.',
+        'S': '...', 'T': '-', 'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-',
+        'Y': '-.--', 'Z': '--..'
+      };
+      if (type === 'encode') {
+        return input.toUpperCase().split('').filter(c => morseMap[c]).map(c => morseMap[c]).join(' ');
+      } else {
+        const reverseMorse = Object.fromEntries(Object.entries(morseMap).map(([k, v]) => [v, k]));
+        return input.split(' ').map(m => reverseMorse[m] || '').join('');
+      }
+    case 'base64':
+      if (type === 'encode') {
+        return btoa(input);
+      } else {
+        return atob(input);
+      }
+    case 'hex':
+      if (type === 'encode') {
+        return input.split('').map(c => c.charCodeAt(0).toString(16)).join('');
+      } else {
+        return input.match(/.{2}/g)?.map(h => String.fromCharCode(parseInt(h, 16))).join('') || '';
+      }
+    case 'atbash':
+      return input.toUpperCase().split('').map(c => {
+        if (/[A-Z]/.test(c)) {
+          return String.fromCharCode(90 - (c.charCodeAt(0) - 65));
+        }
+        return c;
+      }).join('');
+    case 'rot13':
+      return input.toUpperCase().split('').map(c => {
+        if (/[A-Z]/.test(c)) {
+          return String.fromCharCode(((c.charCodeAt(0) - 65 + 13) % 26) + 65);
+        }
+        return c;
+      }).join('');
+    default:
+      return '';
+  }
+};
+
+const caesarCipher = (text: string, shift: number, decode: boolean = false): string => {
+  if (decode) shift = -shift;
+  return text.split('').map(char => {
+    if (/[A-Z]/.test(char)) {
+      return String.fromCharCode(((char.charCodeAt(0) - 65 + shift + 26) % 26) + 65);
+    } else if (/[a-z]/.test(char)) {
+      return String.fromCharCode(((char.charCodeAt(0) - 97 + shift + 26) % 26) + 97);
+    }
+    return char;
+  }).join('');
 };
 
 interface CipherTutorialProps {
@@ -175,45 +383,23 @@ const CipherTutorial: React.FC<CipherTutorialProps> = ({ tutorialId }) => {
   const tutorial = tutorialData[tutorialId];
   
   if (!tutorial) {
-    return <div>Tutorial not available for this topic.</div>;
+    return (
+      <Card className="border-cipher-primary/30">
+        <CardContent className="p-8 text-center">
+          <p className="text-muted-foreground">Step-by-step tutorial for this cipher is being developed.</p>
+          <p className="text-sm text-muted-foreground mt-2">
+            Try the Theory section to learn about this cipher type!
+          </p>
+        </CardContent>
+      </Card>
+    );
   }
 
   const step = tutorial.steps[currentStep];
   const progress = ((currentStep + 1) / tutorial.steps.length) * 100;
 
-  const processAnswer = (input: string, type: 'encode' | 'decode'): string => {
-    switch (tutorialId) {
-      case 'caesar':
-        if (type === 'encode') {
-          return caesarCipher(input, 3);
-        } else {
-          return caesarCipher(input, 3, true);
-        }
-      case 'vigenere':
-        if (type === 'encode') {
-          return vigenereCipher(input, 'KEY');
-        } else {
-          return vigenereCipher(input, 'KEY', true);
-        }
-      case 'base64':
-        if (type === 'encode') {
-          return base64Encode(input);
-        } else {
-          return base64Decode(input);
-        }
-      case 'hex':
-        if (type === 'encode') {
-          return hexEncode(input);
-        } else {
-          return hexDecode(input);
-        }
-      default:
-        return '';
-    }
-  };
-
   const checkAnswer = () => {
-    const result = processAnswer(step.input, step.type);
+    const result = processAnswer(step.input, step.type, tutorialId);
     const correct = userAnswer.trim().toLowerCase() === result.toLowerCase();
     setIsCorrect(correct);
     

@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { BookOpen, Play, Brain, Award } from 'lucide-react';
+import { BookOpen, Play, Brain, Award, Lock, Zap, Binary, Hash } from 'lucide-react';
 import CipherTutorial from '@/components/tutorials/CipherTutorial';
 import PracticeMode from '@/components/tutorials/PracticeMode';
 import TheorySection from '@/components/tutorials/TheorySection';
@@ -17,15 +17,44 @@ const tutorialTopics = [
     description: 'Learn the basics of substitution ciphers',
     difficulty: 'Beginner',
     duration: '15 min',
-    icon: BookOpen
+    icon: BookOpen,
+    missionLevels: [1]
   },
   {
-    id: 'vigenere',
-    title: 'Vigenère Cipher',
-    description: 'Master polyalphabetic substitution',
-    difficulty: 'Intermediate',
-    duration: '25 min',
-    icon: Brain
+    id: 'text-reversal',
+    title: 'Text Reversal',
+    description: 'Simple text manipulation techniques',
+    difficulty: 'Beginner',
+    duration: '8 min',
+    icon: Play,
+    missionLevels: [2]
+  },
+  {
+    id: 'a1z26',
+    title: 'A1Z26 Cipher',
+    description: 'Number-to-letter substitution',
+    difficulty: 'Beginner',
+    duration: '12 min',
+    icon: Hash,
+    missionLevels: [3]
+  },
+  {
+    id: 'binary',
+    title: 'Binary Code',
+    description: 'Binary representation and ASCII conversion',
+    difficulty: 'Beginner',
+    duration: '15 min',
+    icon: Binary,
+    missionLevels: [4]
+  },
+  {
+    id: 'morse',
+    title: 'Morse Code',
+    description: 'Dots and dashes communication',
+    difficulty: 'Beginner',
+    duration: '10 min',
+    icon: Zap,
+    missionLevels: [5]
   },
   {
     id: 'base64',
@@ -33,7 +62,26 @@ const tutorialTopics = [
     description: 'Understand binary-to-text encoding',
     difficulty: 'Beginner',
     duration: '10 min',
-    icon: Play
+    icon: Play,
+    missionLevels: [6]
+  },
+  {
+    id: 'vigenere',
+    title: 'Vigenère Cipher',
+    description: 'Master polyalphabetic substitution',
+    difficulty: 'Intermediate',
+    duration: '25 min',
+    icon: Brain,
+    missionLevels: [7]
+  },
+  {
+    id: 'rail-fence',
+    title: 'Rail Fence Cipher',
+    description: 'Zigzag pattern encryption',
+    difficulty: 'Intermediate',
+    duration: '18 min',
+    icon: Award,
+    missionLevels: [8]
   },
   {
     id: 'hex',
@@ -41,7 +89,26 @@ const tutorialTopics = [
     description: 'Learn hex representation of data',
     difficulty: 'Beginner',
     duration: '12 min',
-    icon: Award
+    icon: Hash,
+    missionLevels: [9]
+  },
+  {
+    id: 'atbash',
+    title: 'Atbash Cipher',
+    description: 'Ancient mirror alphabet cipher',
+    difficulty: 'Intermediate',
+    duration: '15 min',
+    icon: Lock,
+    missionLevels: [10]
+  },
+  {
+    id: 'rot13',
+    title: 'ROT13',
+    description: 'Simple rotation cipher',
+    difficulty: 'Intermediate',
+    duration: '12 min',
+    icon: Play,
+    missionLevels: [11]
   }
 ];
 
@@ -96,10 +163,11 @@ const Tutorials = () => {
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Master the art of cryptography with interactive tutorials, step-by-step guides, and hands-on practice.
+            Learn the techniques used in your missions!
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {tutorialTopics.map((topic) => {
             const IconComponent = topic.icon;
             return (
@@ -111,12 +179,19 @@ const Tutorials = () => {
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <IconComponent className="w-8 h-8 text-cipher-primary group-hover:scale-110 transition-transform" />
-                    <Badge 
-                      variant={topic.difficulty === 'Beginner' ? 'secondary' : 'default'}
-                      className="text-xs"
-                    >
-                      {topic.difficulty}
-                    </Badge>
+                    <div className="flex gap-2">
+                      <Badge 
+                        variant={topic.difficulty === 'Beginner' ? 'secondary' : 'default'}
+                        className="text-xs"
+                      >
+                        {topic.difficulty}
+                      </Badge>
+                      {topic.missionLevels.length > 0 && (
+                        <Badge variant="outline" className="text-xs">
+                          Lvl {topic.missionLevels.join(', ')}
+                        </Badge>
+                      )}
+                    </div>
                   </div>
                   <CardTitle className="group-hover:text-cipher-primary transition-colors">
                     {topic.title}
@@ -143,25 +218,25 @@ const Tutorials = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 justify-center">
                 <Brain className="w-6 h-6 text-cipher-primary" />
-                Learning Path Recommendations
+                Mission-Based Learning Path
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-3 text-left">
                 <div className="flex items-center gap-3">
-                  <Badge variant="secondary">1</Badge>
-                  <span>Start with Caesar Cipher to understand substitution basics</span>
+                  <Badge variant="secondary">1-6</Badge>
+                  <span>Basic Encryption: Caesar, Reversal, Numbers, Binary, Morse, Base64</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Badge variant="secondary">2</Badge>
-                  <span>Learn Base64 and Hex encoding for data representation</span>
+                  <Badge variant="secondary">7-11</Badge>
+                  <span>Intermediate Ciphers: Vigenère, Rail Fence, Hex, Atbash, ROT13</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Badge variant="secondary">3</Badge>
-                  <span>Master Vigenère Cipher for advanced techniques</span>
+                  <Badge variant="secondary">12-15</Badge>
+                  <span>Advanced Cryptanalysis: Hash Cracking, RSA, Enigma, Steganography</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Badge variant="secondary">4</Badge>
+                  <Badge variant="secondary">∞</Badge>
                   <span>Apply skills in the main mission challenges</span>
                 </div>
               </div>

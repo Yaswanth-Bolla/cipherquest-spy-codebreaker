@@ -41,15 +41,122 @@ const theoryData: TheoryData = {
           'Wraps around the alphabet (Z+1 = A)',
           'Preserves letter case and non-alphabetic characters'
         ]
+      }
+    ]
+  },
+  'text-reversal': {
+    title: 'Text Reversal Theory',
+    sections: [
+      {
+        title: 'Simple Text Manipulation',
+        content: 'Text reversal is one of the simplest encoding methods where the message is written backwards. It can be applied to the entire message or word by word.',
+        keyPoints: [
+          'Reverse entire message or individual words',
+          'Preserves original characters',
+          'Easy to implement and decode',
+          'Not secure but useful for obfuscation'
+        ]
       },
       {
-        title: 'Strengths and Weaknesses',
-        content: 'While simple to implement, the Caesar cipher is easily broken through frequency analysis or brute force attacks, as there are only 25 possible keys.',
+        title: 'Applications and Variations',
+        content: 'Text reversal is often combined with other techniques for layered security. It can be used for simple puzzles, basic obfuscation, or as part of more complex encoding schemes.',
         keyPoints: [
-          'Strength: Simple to use and understand',
-          'Weakness: Only 25 possible keys',
-          'Weakness: Vulnerable to frequency analysis',
-          'Historical significance in cryptography'
+          'Can be combined with other ciphers',
+          'Used in puzzles and games',
+          'Foundation for understanding transformation',
+          'Historical use in mirror writing'
+        ]
+      }
+    ]
+  },
+  a1z26: {
+    title: 'A1Z26 Cipher Theory',
+    sections: [
+      {
+        title: 'Number-Letter Substitution',
+        content: 'The A1Z26 cipher replaces each letter with its position in the alphabet. A=1, B=2, C=3, and so on up to Z=26.',
+        keyPoints: [
+          'Direct mapping: A=1, B=2, ..., Z=26',
+          'Numbers separated by dashes or spaces',
+          'Preserves word boundaries',
+          'Easy to encode and decode'
+        ]
+      },
+      {
+        title: 'Variations and Uses',
+        content: 'A1Z26 can be modified with different starting numbers, reverse ordering, or combined with mathematical operations for added complexity.',
+        keyPoints: [
+          'Can start from 0 instead of 1',
+          'Reverse order (Z=1, Y=2, etc.)',
+          'Mathematical operations on numbers',
+          'Used in educational cryptography'
+        ]
+      }
+    ]
+  },
+  binary: {
+    title: 'Binary Code Theory',
+    sections: [
+      {
+        title: 'Binary Number System',
+        content: 'Binary uses only two digits (0 and 1) to represent all data. In text encoding, each character is represented by its ASCII value converted to binary.',
+        animation: 'binary-conversion',
+        keyPoints: [
+          'Base-2 number system (0s and 1s)',
+          'Each bit represents a power of 2',
+          '8 bits = 1 byte = 1 character',
+          'Foundation of all digital communication'
+        ]
+      },
+      {
+        title: 'ASCII and Binary Conversion',
+        content: 'ASCII assigns numbers to characters (A=65, B=66, etc.). These numbers are then converted to 8-bit binary representations.',
+        keyPoints: [
+          'ASCII: American Standard Code for Information Interchange',
+          'Each character has a unique number',
+          'Numbers converted to 8-bit binary',
+          'Extended ASCII includes special characters'
+        ]
+      }
+    ]
+  },
+  morse: {
+    title: 'Morse Code Theory',
+    sections: [
+      {
+        title: 'Dots, Dashes, and Communication',
+        content: 'Morse code represents letters and numbers using combinations of short signals (dots) and long signals (dashes). Developed for telegraph communication.',
+        keyPoints: [
+          'Dots (.) and dashes (-) represent letters',
+          'Spaces separate letters',
+          'Longer pauses separate words',
+          'Optimized for telegraph transmission'
+        ]
+      },
+      {
+        title: 'International Morse Code',
+        content: 'The International Morse Code standardized the system worldwide. Common letters like E (.) and T (-) use shorter codes for efficiency.',
+        keyPoints: [
+          'Standardized worldwide system',
+          'Frequent letters use shorter codes',
+          'SOS (...---...) is universal distress signal',
+          'Still used in aviation and radio'
+        ]
+      }
+    ]
+  },
+  base64: {
+    title: 'Base64 Encoding Theory',
+    sections: [
+      {
+        title: 'Binary to Text Encoding',
+        content: 'Base64 encoding converts binary data into ASCII text using 64 printable characters. It\'s not encryption, but a way to represent data.',
+        animation: 'base64-process',
+        keyPoints: [
+          'Uses 64 characters: A-Z, a-z, 0-9, +, /',
+          'Converts 3 bytes into 4 characters',
+          'Adds padding with = characters',
+          'Not encryption - easily reversible'
         ]
       }
     ]
@@ -76,49 +183,30 @@ const theoryData: TheoryData = {
           'Keyword repeats to match message length',
           'Each keyword letter determines the shift'
         ]
-      },
-      {
-        title: 'Breaking Vigenère',
-        content: 'While much stronger than Caesar, Vigenère can be broken using the Kasiski test to find the keyword length, then frequency analysis.',
-        keyPoints: [
-          'Kasiski test finds repeated patterns',
-          'Frequency analysis on each position',
-          'Longer keywords provide better security'
-        ]
       }
     ]
   },
-  base64: {
-    title: 'Base64 Encoding Theory',
+  'rail-fence': {
+    title: 'Rail Fence Cipher Theory',
     sections: [
       {
-        title: 'Binary to Text Encoding',
-        content: 'Base64 encoding converts binary data into ASCII text using 64 printable characters. It\'s not encryption, but a way to represent data.',
-        animation: 'base64-process',
+        title: 'Zigzag Pattern Encryption',
+        content: 'The Rail Fence cipher writes the message in a zigzag pattern across multiple horizontal lines (rails), then reads the letters off line by line.',
         keyPoints: [
-          'Uses 64 characters: A-Z, a-z, 0-9, +, /',
-          'Converts 3 bytes into 4 characters',
-          'Adds padding with = characters'
+          'Message written in zigzag pattern',
+          'Uses multiple horizontal rails',
+          'Read letters row by row',
+          'Number of rails is the key'
         ]
       },
       {
-        title: 'The Encoding Process',
-        content: 'Every 3 bytes (24 bits) are split into four 6-bit groups. Each 6-bit value (0-63) maps to a character in the Base64 alphabet.',
-        animation: 'base64-conversion',
+        title: 'Encryption Process',
+        content: 'Characters are placed on rails following a zigzag pattern. When the bottom rail is reached, direction reverses upward. The ciphertext is formed by reading each rail left to right.',
         keyPoints: [
-          '24 bits split into four 6-bit groups',
-          'Each 6-bit value maps to Base64 character',
-          'Padding ensures output length is multiple of 4'
-        ]
-      },
-      {
-        title: 'Common Uses',
-        content: 'Base64 is widely used in email, web URLs, and data transmission where binary data needs to be represented as text.',
-        keyPoints: [
-          'Email attachments (MIME)',
-          'Data URLs in web pages',
-          'API responses and JSON data',
-          'Not for security - easily reversible'
+          'Start at top rail',
+          'Zigzag down then up',
+          'Direction changes at top and bottom',
+          'Concatenate all rails for final cipher'
         ]
       }
     ]
@@ -135,25 +223,55 @@ const theoryData: TheoryData = {
           'Each hex digit = 4 bits',
           'Two hex digits = 1 byte'
         ]
-      },
+      }
+    ]
+  },
+  atbash: {
+    title: 'Atbash Cipher Theory',
+    sections: [
       {
-        title: 'Converting to Hex',
-        content: 'Each byte (8 bits) becomes two hex digits. For example, the byte 255 in decimal becomes FF in hexadecimal.',
-        animation: 'byte-to-hex',
+        title: 'Mirror Alphabet Substitution',
+        content: 'Atbash is an ancient substitution cipher where the alphabet is reversed: A becomes Z, B becomes Y, C becomes X, and so on.',
         keyPoints: [
-          'Split byte into two 4-bit nibbles',
-          'Convert each nibble to hex digit',
-          'Common in programming and debugging'
+          'Ancient Hebrew cipher',
+          'Alphabet mirrored: A↔Z, B↔Y, C↔X',
+          'Self-reciprocal (encoding = decoding)',
+          'Used in biblical texts'
         ]
       },
       {
-        title: 'Applications',
-        content: 'Hex encoding is used in programming, color codes, memory addresses, and representing binary data in a human-readable format.',
+        title: 'Mathematical Approach',
+        content: 'In Atbash, each letter\'s position is subtracted from 26 (for English) and added to 1. So A (position 1) becomes 26-1+1 = Z (position 26).',
         keyPoints: [
-          'Memory addresses in debugging',
-          'Color codes in web design (#FF0000)',
-          'Cryptographic hashes and keys',
-          'Raw data representation'
+          'Formula: new_position = 27 - old_position',
+          'Works for any alphabet size',
+          'Symmetric encryption/decryption',
+          'Simple but effective obfuscation'
+        ]
+      }
+    ]
+  },
+  rot13: {
+    title: 'ROT13 Theory',
+    sections: [
+      {
+        title: 'Rotation Cipher',
+        content: 'ROT13 is a special case of the Caesar cipher where each letter is replaced with the letter 13 positions after it in the alphabet.',
+        keyPoints: [
+          'Caesar cipher with shift of 13',
+          'Self-reciprocal (ROT13 of ROT13 = original)',
+          'A becomes N, B becomes O, etc.',
+          'Commonly used in online forums'
+        ]
+      },
+      {
+        title: 'Practical Applications',
+        content: 'ROT13 is often used to obscure spoilers, offensive content, or puzzle solutions in online discussions. It\'s not secure but provides simple text obfuscation.',
+        keyPoints: [
+          'Used for spoiler protection',
+          'Simple text obfuscation',
+          'Not cryptographically secure',
+          'Easy mental calculation'
         ]
       }
     ]
@@ -169,7 +287,16 @@ const TheorySection: React.FC<TheorySectionProps> = ({ tutorialId }) => {
   const theory = theoryData[tutorialId];
   
   if (!theory) {
-    return <div>Theory not available for this topic.</div>;
+    return (
+      <Card className="border-cipher-primary/30">
+        <CardContent className="p-8 text-center">
+          <p className="text-muted-foreground">Theory content for this cipher is being developed.</p>
+          <p className="text-sm text-muted-foreground mt-2">
+            This cipher appears in Mission Level {tutorialId} - try the step-by-step tutorial instead!
+          </p>
+        </CardContent>
+      </Card>
+    );
   }
 
   const progress = ((currentSection + 1) / theory.sections.length) * 100;

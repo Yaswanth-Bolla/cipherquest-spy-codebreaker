@@ -101,6 +101,47 @@ const CipherAnimation: React.FC<CipherAnimationProps> = ({ type }) => {
         { text: 'Convert: 4, 1', highlight: [] },
         { text: 'Hex: 41', highlight: [] }
       ]
+    },
+    'binary-conversion': {
+      title: 'Binary to ASCII Conversion',
+      steps: [
+        { text: 'Binary: 01001000 01001001', highlight: [] },
+        { text: 'Split into bytes: 01001000 | 01001001', highlight: [] },
+        { text: 'Convert to decimal: 72 | 73', highlight: [] },
+        { text: 'ASCII lookup: H | I', highlight: [] },
+        { text: 'Result: "HI"', highlight: [] }
+      ]
+    },
+    'rail-fence-demo': {
+      title: 'Rail Fence Cipher (3 Rails)',
+      steps: [
+        { text: 'Message: WEAREDISCOVERED', highlight: [] },
+        { text: 'Rail 1: W   R   S   V   D', highlight: [] },
+        { text: 'Rail 2:  E A E D I C O E E', highlight: [] },
+        { text: 'Rail 3:   A   D   O   R', highlight: [] },
+        { text: 'Read rails: WRSVD + EAEDICOE + ADOR', highlight: [] },
+        { text: 'Result: WRSDEAEDICOEADOR', highlight: [] }
+      ]
+    },
+    'atbash-demo': {
+      title: 'Atbash Cipher Demonstration',
+      steps: [
+        { text: 'Normal: A B C D E F G H I J K L M', highlight: [] },
+        { text: 'Atbash: Z Y X W V U T S R Q P O N', highlight: [] },
+        { text: 'Normal: N O P Q R S T U V W X Y Z', highlight: [] },
+        { text: 'Atbash: M L K J I H G F E D C B A', highlight: [] },
+        { text: 'Example: HELLO → SVOOL', highlight: [] }
+      ]
+    },
+    'morse-demo': {
+      title: 'Morse Code Patterns',
+      steps: [
+        { text: 'A: .-  B: -...  C: -.-.  D: -..', highlight: [] },
+        { text: 'E: .   F: ..-.  G: --.   H: ....', highlight: [] },
+        { text: 'I: ..  J: .---  K: -.-   L: .-..', highlight: [] },
+        { text: 'M: --  N: -.    O: ---   P: .--.' highlight: [] },
+        { text: 'Example: SOS = ... --- ...', highlight: [] }
+      ]
     }
   };
 
