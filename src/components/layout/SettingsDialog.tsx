@@ -52,6 +52,19 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ open, onOpenChange }) =
           
           <div className="space-y-6 py-4">
             <div className="space-y-4">
+              <h3 className="text-sm font-medium text-gray-300">Agent Information</h3>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => setRankingOpen(true)}
+                className="w-full flex items-center justify-center gap-2 border-cipher-primary/30 text-cipher-primary hover:bg-cipher-primary/20"
+              >
+                <Award className="h-4 w-4" />
+                View Ranking System
+              </Button>
+            </div>
+
+            <div className="space-y-4">
               <h3 className="text-sm font-medium text-gray-300">Audio Settings</h3>
               
               <div className="flex items-center justify-between">
@@ -101,19 +114,6 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ open, onOpenChange }) =
                   onCheckedChange={toggleTheme}
                 />
               </div>
-            </div>
-
-            <div className="space-y-4">
-              <h3 className="text-sm font-medium text-gray-300">Agent Information</h3>
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => setRankingOpen(true)}
-                className="w-full flex items-center justify-center gap-2 border-cipher-primary/30 text-cipher-primary hover:bg-cipher-primary/20"
-              >
-                <Award className="h-4 w-4" />
-                View Ranking System
-              </Button>
             </div>
             
             <div className="space-y-4">
