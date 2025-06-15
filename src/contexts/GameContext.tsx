@@ -28,23 +28,32 @@ interface GameProviderProps {
 export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
   const { user } = useAuth();
   const [progress, setProgress] = useState<GameProgress>(initialGameProgress);
+  const [previousUserId, setPreviousUserId] = useState<string | null>(null);
 
   // Load user-specific progress when user changes
   useEffect(() => {
-    if (user) {
+    if (user && user.id !== previousUserId) {
       const userProgressKey = `cipherQuestProgress_${user.id}`;
       const savedProgress = localStorage.getItem(userProgressKey);
       if (savedProgress) {
-        setProgress(JSON.parse(savedProgress));
+        try {
+          const parsedProgress = JSON.parse(savedProgress);
+          setProgress(parsedProgress);
+        } catch (error) {
+          console.error('Error parsing saved progress:', error);
+          setProgress(initialGameProgress);
+        }
       } else {
-        // New user, start with initial progress
+        // New user, start with initial progress but don't overwrite existing progress
         setProgress(initialGameProgress);
       }
-    } else {
-      // No user logged in, reset to initial progress
+      setPreviousUserId(user.id);
+    } else if (!user && previousUserId) {
+      // User logged out, reset to initial progress
       setProgress(initialGameProgress);
+      setPreviousUserId(null);
     }
-  }, [user]);
+  }, [user, previousUserId]);
 
   // Save progress to localStorage whenever it changes (only if user is logged in)
   useEffect(() => {
