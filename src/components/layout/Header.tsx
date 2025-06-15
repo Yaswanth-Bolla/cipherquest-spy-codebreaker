@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Layers, HelpCircle, Settings, Award, FileText } from 'lucide-react';
+import { Layers, HelpCircle, Settings, Award, FileText, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import HelpDialog from './HelpDialog';
 import SettingsDialog from './SettingsDialog';
@@ -80,6 +81,15 @@ const Header: React.FC = () => {
                   </li>
                 </ul>
               </NavigationMenuContent>
+            </NavigationMenuItem>
+            
+            <NavigationMenuItem>
+              <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), "bg-transparent text-gray-300 hover:bg-cipher-primary/20 hover:text-cipher-primary")} asChild>
+                <Link to="/tutorials" className="flex items-center gap-2">
+                  <BookOpen className="h-4 w-4" />
+                  Interactive Tutorials
+                </Link>
+              </NavigationMenuLink>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
