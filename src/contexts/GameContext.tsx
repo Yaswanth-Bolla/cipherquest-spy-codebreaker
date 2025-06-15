@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { GameProgress, initialGameProgress, levels } from '@/utils/gameData';
 import { updateLeaderboardEntry } from '@/lib/supabase';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface GameContextType {
   progress: GameProgress;
@@ -25,18 +26,37 @@ interface GameProviderProps {
 }
 
 export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
-  const [progress, setProgress] = useState<GameProgress>(() => {
-    // Load saved progress from localStorage on initial mount
-    const savedProgress = localStorage.getItem('cipherQuestProgress');
-    return savedProgress ? JSON.parse(savedProgress) : initialGameProgress;
-  });
+  const { user } = useAuth();
+  const [progress, setProgress] = useState<GameProgress>(initialGameProgress);
 
-  // Save progress to localStorage whenever it changes
+  // Load user-specific progress when user changes
   useEffect(() => {
-    localStorage.setItem('cipherQuestProgress', JSON.stringify(progress));
-  }, [progress]);
+    if (user) {
+      const userProgressKey = `cipherQuestProgress_${user.id}`;
+      const savedProgress = localStorage.getItem(userProgressKey);
+      if (savedProgress) {
+        setProgress(JSON.parse(savedProgress));
+      } else {
+        // New user, start with initial progress
+        setProgress(initialGameProgress);
+      }
+    } else {
+      // No user logged in, reset to initial progress
+      setProgress(initialGameProgress);
+    }
+  }, [user]);
+
+  // Save progress to localStorage whenever it changes (only if user is logged in)
+  useEffect(() => {
+    if (user) {
+      const userProgressKey = `cipherQuestProgress_${user.id}`;
+      localStorage.setItem(userProgressKey, JSON.stringify(progress));
+    }
+  }, [progress, user]);
 
   const completeLevel = (levelId: number) => {
+    if (!user) return; // Don't allow progress without authentication
+    
     setProgress(prev => {
       // Add to completed levels if not already there
       const completedLevels = prev.completedLevels.includes(levelId)
@@ -82,6 +102,8 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
   };
 
   const useHint = (levelId: number) => {
+    if (!user) return; // Don't allow hint usage without authentication
+    
     setProgress(prev => {
       const hintsUsed = { ...prev.hintsUsed };
       hintsUsed[levelId] = (hintsUsed[levelId] || 0) + 1;
