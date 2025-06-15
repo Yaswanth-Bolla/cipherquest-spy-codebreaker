@@ -19,11 +19,11 @@ const ProfilePopover: React.FC = () => {
   if (!user) return null;
 
   const getPlayerRank = (completedCount: number): string => {
-    if (completedCount >= 45) return "Master Cryptographer";
-    if (completedCount >= 35) return "Senior Agent";
-    if (completedCount >= 25) return "Field Operative";
-    if (completedCount >= 15) return "Analyst";
-    if (completedCount >= 5) return "Junior Agent";
+    if (completedCount >= 15) return "Master Cryptographer";
+    if (completedCount >= 13) return "Senior Agent";
+    if (completedCount >= 10) return "Field Operative";
+    if (completedCount >= 6) return "Analyst";
+    if (completedCount >= 3) return "Junior Agent";
     return "Recruit";
   };
 
