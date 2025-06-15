@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Shield, Play, Trophy, Settings, LogIn, Users } from 'lucide-react';
@@ -34,7 +35,7 @@ const Index = () => {
             CipherQuest
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-            Welcome to the ultimate cryptographic adventure. Decode secrets, solve puzzles, and become a master cryptographer.
+            Welcome to the ultimate cryptographic adventure. Decode secrets, solve puzzles, and become a master cryptographer through 15 progressively challenging missions.
           </p>
           
           {!user ? (
@@ -76,12 +77,12 @@ const Index = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Shield className="w-6 h-6 text-cipher-primary" />
-                50+ Missions
+                15 Elite Missions
               </CardTitle>
             </CardHeader>
             <CardContent>
               <CardDescription>
-                Progressive difficulty levels from basic ciphers to advanced cryptographic challenges.
+                Carefully crafted missions covering essential cryptographic techniques from basic ciphers to advanced encryption methods.
               </CardDescription>
             </CardContent>
           </Card>
@@ -90,12 +91,12 @@ const Index = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Trophy className="w-6 h-6 text-cipher-primary" />
-                Compete & Rank
+                Agent Ranking System
               </CardTitle>
             </CardHeader>
             <CardContent>
               <CardDescription>
-                Track your progress and compete with other agents on the global leaderboard.
+                Progress through 6 distinct agent ranks and compete with other cryptographers on the global leaderboard.
               </CardDescription>
             </CardContent>
           </Card>
@@ -104,12 +105,12 @@ const Index = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Settings className="w-6 h-6 text-cipher-primary" />
-                Learn & Grow
+                Learn & Master
               </CardTitle>
             </CardHeader>
             <CardContent>
               <CardDescription>
-                Interactive tutorials and hints help you master the art of cryptography.
+                Interactive tutorials, progressive difficulty, and comprehensive hints to master cryptography fundamentals.
               </CardDescription>
             </CardContent>
           </Card>
@@ -141,7 +142,7 @@ const Index = () => {
               </CardHeader>
               <CardContent>
                 <CardDescription className="mb-4">
-                  Sign in to track your progress, compete on the leaderboard, and unlock exclusive missions.
+                  Sign in to track your progress, advance through agent ranks, and unlock all 15 cryptographic missions.
                 </CardDescription>
                 <Button asChild className="w-full bg-cipher-primary hover:bg-cipher-secondary">
                   <Link to="/auth">Create Your Agent Profile</Link>
