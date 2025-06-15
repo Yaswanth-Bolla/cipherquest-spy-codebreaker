@@ -62,9 +62,9 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
 
       // Calculate total time spent (simple estimation based on completion dates)
       const totalTimeMs = calculateTotalTime(completionDates);
-      
+
       // Update leaderboard asynchronously
-      updateLeaderboardEntry(completedLevels.length, totalTimeMs)
+      updateLeaderboardEntry(completedLevels, totalTimeMs)
         .catch(error => console.error('Failed to update leaderboard:', error));
       
       return newProgress;
