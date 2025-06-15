@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Layout from '@/components/layout/Layout';
@@ -43,11 +42,7 @@ const Leaderboard = () => {
 
   // Fallback data in case of error or empty response
   const fallbackData: LeaderboardEntry[] = [
-    { id: "1", name: "Agent Shadow", completedLevels: 42, totalTime: "03:45:22", rank: "Master Cryptographer" },
-    { id: "2", name: "CodeBreaker", completedLevels: 38, totalTime: "04:10:45", rank: "Senior Agent" },
-    { id: "3", name: "CipherHunter", completedLevels: 35, totalTime: "04:30:18", rank: "Senior Agent" },
-    { id: "4", name: "NightCoder", completedLevels: 28, totalTime: "05:55:40", rank: "Field Operative" },
-    { id: "5", name: "BinaryPhantom", completedLevels: 22, totalTime: "06:15:50", rank: "Analyst" },
+    { id: "5", name: "BinaryPhantom", completedLevels: 5, totalTime: "06:15:50", rank: "Junior Agent" },
   ];
 
   // Use real data if available, otherwise use fallback
