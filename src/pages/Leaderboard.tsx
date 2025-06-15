@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+
+import React, { useEffect } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import Layout from '@/components/layout/Layout';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Trophy, Medal, Award, Clock, Star, Loader2, RefreshCw } from 'lucide-react';
@@ -16,45 +17,60 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { supabase } from "@/integrations/supabase/client";
+
+const LEADERBOARD_MISSION_TOTAL = 15;
+
+const getPlayerRank = (completedCount: number) => {
+  if (completedCount >= 13) return "Master Cryptographer";
+  if (completedCount >= 10) return "Senior Agent";
+  if (completedCount >= 7) return "Field Operative";
+  if (completedCount >= 4) return "Analyst";
+  if (completedCount >= 1) return "Junior Agent";
+  return "Recruit";
+};
 
 const Leaderboard = () => {
   const { progress } = useGame();
-  
+  const queryClient = useQueryClient();
+
   // Fetch leaderboard data from Supabase with auto-refresh
-  const { data: leaderboardData, isLoading, error, refetch } = useQuery({
+  const {
+    data: leaderboardData,
+    isLoading,
+    error,
+    refetch,
+  } = useQuery({
     queryKey: ['leaderboard'],
     queryFn: getLeaderboard,
-    refetchInterval: 30000, // Refresh every 30 seconds
+    refetchInterval: 30000,
   });
 
-  // Calculate player rank based on completed missions
-  const getPlayerRank = (completedCount: number) => {
-    if (completedCount >= 45) return "Master Cryptographer";
-    if (completedCount >= 35) return "Senior Agent";
-    if (completedCount >= 25) return "Field Operative";
-    if (completedCount >= 15) return "Analyst";
-    if (completedCount >= 5) return "Junior Agent";
-    return "Recruit";
-  };
+  // Real-time listener for leaderboard changes
+  useEffect(() => {
+    // Listen to changes on the leaderboard table
+    const channel = supabase
+      .channel('realtime-leaderboard')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'leaderboard' },
+        (payload) => {
+          console.log('Leaderboard realtime payload:', payload);
+          // Invalidate and refetch leaderboard data
+          queryClient.invalidateQueries({ queryKey: ['leaderboard'] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [queryClient]);
 
   const playerCompletedCount = progress.completedLevels.length;
   const playerRank = getPlayerRank(playerCompletedCount);
 
-  // Fallback data in case of error or empty response
-  const fallbackData: LeaderboardEntry[] = [
-    { id: "5", name: "BinaryPhantom", completedLevels: 5, totalTime: "06:15:50", rank: "Junior Agent" },
-  ];
-
-  // Use real data if available, otherwise use fallback
-  const displayData = (leaderboardData && leaderboardData.length > 0) ? leaderboardData : fallbackData;
-
-  // Sort by completed levels (descending) then by total time (ascending)
-  const sortedData = [...displayData].sort((a, b) => {
-    if (a.completedLevels !== b.completedLevels) {
-      return b.completedLevels - a.completedLevels;
-    }
-    return a.totalTime.localeCompare(b.totalTime);
-  });
+  const displayData = leaderboardData || [];
 
   return (
     <Layout>
@@ -97,6 +113,13 @@ const Leaderboard = () => {
                     Try Again
                   </Button>
                 </div>
+              ) : !displayData || displayData.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <p>No leaderboard data available yet.</p>
+                  <p className="text-sm">
+                    Complete missions to become the first elite cryptography agent on the leaderboard!
+                  </p>
+                </div>
               ) : (
                 <Table>
                   <TableHeader>
@@ -109,7 +132,7 @@ const Leaderboard = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {sortedData.map((agent, index) => (
+                    {displayData.map((agent, index) => (
                       <TableRow key={agent.id} className="hover:bg-cipher-primary/10">
                         <TableCell className="font-medium">
                           {index === 0 ? (
@@ -123,19 +146,19 @@ const Leaderboard = () => {
                           )}
                         </TableCell>
                         <TableCell>{agent.name}</TableCell>
-                        <TableCell className="hidden sm:table-cell">{agent.completedLevels}/50</TableCell>
+                        <TableCell className="hidden sm:table-cell">{agent.completedLevels}/{LEADERBOARD_MISSION_TOTAL}</TableCell>
                         <TableCell className="hidden md:table-cell">
                           <span className="flex items-center gap-1">
                             <Clock size={14} /> {agent.totalTime}
                           </span>
                         </TableCell>
                         <TableCell className="hidden sm:table-cell">
-                          <Badge variant="outline">{agent.rank}</Badge>
+                          <Badge variant="outline">{getPlayerRank(agent.completedLevels)}</Badge>
                         </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
-                  {sortedData.length === 0 && (
+                  {displayData.length === 0 && (
                     <TableCaption>No leaderboard data available</TableCaption>
                   )}
                 </Table>
@@ -161,12 +184,12 @@ const Leaderboard = () => {
                   <div>
                     <div className="flex justify-between text-sm mb-1">
                       <span className="text-muted-foreground">Missions Completed</span>
-                      <span className="text-cyan-400 font-bold">{playerCompletedCount}/50</span>
+                      <span className="text-cyan-400 font-bold">{playerCompletedCount}/{LEADERBOARD_MISSION_TOTAL}</span>
                     </div>
                     <div className="h-3 bg-gray-700 rounded-full border border-gray-600">
                       <div 
                         className="h-full bg-gradient-to-r from-cyan-400 to-cyan-300 rounded-full shadow-lg"
-                        style={{ width: `${(playerCompletedCount / 50) * 100}%` }}
+                        style={{ width: `${(playerCompletedCount / LEADERBOARD_MISSION_TOTAL) * 100}%` }}
                       ></div>
                     </div>
                   </div>
