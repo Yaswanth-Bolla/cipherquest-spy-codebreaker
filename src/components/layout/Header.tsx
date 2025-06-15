@@ -5,6 +5,7 @@ import { Layers, HelpCircle, Settings, Award, FileText, BookOpen } from 'lucide-
 import { Button } from '@/components/ui/button';
 import HelpDialog from './HelpDialog';
 import SettingsDialog from './SettingsDialog';
+import ProfilePopover from './ProfilePopover';
 import ThemeToggle from './ThemeToggle';
 import {
   NavigationMenu,
@@ -21,13 +22,8 @@ import { useAuth } from '@/contexts/AuthContext';
 const Header: React.FC = () => {
   const [helpOpen, setHelpOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
-  
-  const handleSignOut = async () => {
-    await signOut();
-    navigate('/auth');
-  };
 
   return (
     <header className="py-4 px-6 flex justify-between items-center bg-cipher-darker border-b border-cipher-primary/20">
@@ -97,19 +93,7 @@ const Header: React.FC = () => {
       
       <div className="flex gap-3 items-center">
         {user ? (
-          <>
-            <span className="text-sm text-cipher-primary">
-              Agent: {user.user_metadata.name || 'Anonymous'}
-            </span>
-            <Button 
-              variant="ghost"
-              size="sm"
-              onClick={handleSignOut}
-              className="text-cipher-light hover:bg-cipher-primary/20 hover:text-cipher-primary"
-            >
-              Sign Out
-            </Button>
-          </>
+          <ProfilePopover />
         ) : (
           <Button
             variant="ghost"
