@@ -372,6 +372,6 @@ export const getLevelInfoList = (progress: GameProgress): LevelInfo[] => {
     difficulty: level.difficulty,
     cryptoType: level.cryptoType,
     isCompleted: progress.completedLevels.includes(level.id),
-    isLocked: level.id > progress.currentLevel && !progress.completedLevels.includes(level.id),
+    isLocked: false, // All levels are now unlocked
   }));
 };
