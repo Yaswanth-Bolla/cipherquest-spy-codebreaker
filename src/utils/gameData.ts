@@ -157,7 +157,7 @@ const level7: MissionData = {
   cryptoType: "Vigenère Cipher",
   difficulty: "medium",
   puzzleData: {
-    challenge: "JKEREHTCCI SO DHY FIP GNVAZRIWWO SH WTSDEEPD",
+    challenge: "JLNGSVNVUV OP LOE RZZ USOFYPGDEU OP EPDQWCZA",
     hint: [
       "In Vigenère cipher, you need a keyword that repeats to encrypt the message.",
       "Each letter in the keyword shifts the corresponding letter in the plaintext by a different amount.",
